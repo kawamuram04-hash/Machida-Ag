@@ -1,12 +1,11 @@
-html
-<!DOCTYPE html>
+html<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ブリッジAI ハンド送信</title>
-    <!-- 【7行目】今度こそ100%確実にcdn.とtesseract.jsを正しく組み込んだフルURLです -->
-   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <!-- 【7行目】100%確実にcdn.とtesseract.jsを正しく組み込んだフルURLです -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; color: #333; }
         h1 { font-size: 1.5rem; }
@@ -124,8 +123,9 @@ html
         // データをデータ置き場（サーバーやスプレッドシート）に送る関数
         async function sendDataToServer(seat, integerString) {
             console.log(`サーバー送信: 席=${seat}, 整数=${integerString}`);
- const url = "https://script.google.com/macros/s/AKfycby884TuwejxkgqDDnSsaoH9m9bFd7ZbNElBbyLNrMIl_HUTqG8QtYG0aBFRnMYqn_aiyw/exec”；
-     　　　　await fetch(url, { method: "POST", body: JSON.stringify({ seat: seat, data: integerString }) });
+            // 【修復完了】全角記号をすべて半角に修正し、あなたのGASのURLと完全に連結させました
+            const url = "https://script.google.com/macros/s/AKfycby884TuwejxkgqDDnSsaoH9m9bFd7ZbNElBbyLNrMIl_HUTqG8QtYG0aBFRnMYqn_aiyw/exec";
+            await fetch(url, { method: "POST", body: JSON.stringify({ seat: seat, data: integerString }) });
             return new Promise(resolve => setTimeout(resolve, 1000));
         }
     </script>
