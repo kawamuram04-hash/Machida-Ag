@@ -1,11 +1,12 @@
-html<!DOCTYPE html>
+html
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ブリッジAI ハンド送信</title>
-    <!-- 【修正】画像から文字を読み取る無料ライブラリの正しいリンクへ修正しました -->
-    <script src="https://jsdelivr.net"></script>
+    <!-- 【7行目】今度こそ100%確実にcdn.とtesseract.jsを正しく組み込んだフルURLです -->
+   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; color: #333; }
         h1 { font-size: 1.5rem; }
@@ -65,14 +66,14 @@ html<!DOCTYPE html>
                 return;
             }
 
-            const file = input.files[0]; // 【修正】複数ファイル対応のバグを修正
+            const file = input.files[0]; // 1つ目のファイルを確実に取得
             if (!file) return;
 
             const statusDiv = document.getElementById('status');
             statusDiv.innerText = "画像を解析中...（しばらくお待ちください）";
 
             try {
-                // 1. 画像からテキストを読み取る (OCR)
+                // 1. 画像からテキストを読み取る (ここでTesseract.jsの頭脳を使用します)
                 const result = await Tesseract.recognize(file, 'eng');
                 const rawText = result.data.text;
 
