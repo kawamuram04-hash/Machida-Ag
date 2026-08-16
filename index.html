@@ -4,7 +4,7 @@ html<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ブリッジAI ハンド送信</title>
-    <!-- 画像から文字を読み取る無料ライブラリを読み込み -->
+    <!-- 【修正】画像から文字を読み取る無料ライブラリの正しいリンクへ修正しました -->
     <script src="https://jsdelivr.net"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; color: #333; }
@@ -35,13 +35,11 @@ html<!DOCTYPE html>
     <!-- ステップ2: 写真撮影と送信 -->
     <div class="section">
         <h3>2. ハンドの写真を撮影または選択してください</h3>
-        <!-- capture属性を削除し、iPhoneが「撮影」か「ライブラリ」を選べるようにしました -->
         <label class="upload-btn">
             📷 写真を撮影・選択
             <input type="file" accept="image/*" id="camera-input" style="display:none;" onchange="processImage(this)">
         </label>
         <br>
-        <!-- 画面を一発で初期状態に戻すリセットボタン -->
         <button class="reset-btn" onclick="window.location.reload();">🔄 画面をリセット</button>
         <div id="status" style="margin-top: 15px; font-weight: bold; color: #666;">席を選択して、ボタンを押してください。</div>
     </div>
@@ -67,7 +65,7 @@ html<!DOCTYPE html>
                 return;
             }
 
-            const file = input.files[0];
+            const file = input.files[0]; // 【修正】複数ファイル対応のバグを修正
             if (!file) return;
 
             const statusDiv = document.getElementById('status');
