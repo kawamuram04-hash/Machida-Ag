@@ -124,6 +124,8 @@ html
         // データをデータ置き場（サーバーやスプレッドシート）に送る関数
         async function sendDataToServer(seat, integerString) {
             console.log(`サーバー送信: 席=${seat}, 整数=${integerString}`);
+ const url = "https://script.google.com/macros/s/AKfycby884TuwejxkgqDDnSsaoH9m9bFd7ZbNElBbyLNrMIl_HUTqG8QtYG0aBFRnMYqn_aiyw/exec”；
+     　　　　await fetch(url, { method: "POST", body: JSON.stringify({ seat: seat, data: integerString }) });
             return new Promise(resolve => setTimeout(resolve, 1000));
         }
     </script>
