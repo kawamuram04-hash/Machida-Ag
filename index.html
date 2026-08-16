@@ -1,5 +1,4 @@
-html
-<!DOCTYPE html>
+html<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +14,7 @@ html
         .seat-btn { padding: 15px 20px; font-size: 1.2rem; font-weight: bold; border: 2px solid #ccc; border-radius: 5px; background: white; cursor: pointer; width: 22%; }
         .seat-btn.selected { background: #007bff; color: white; border-color: #0056b3; }
         .upload-btn { display: inline-block; padding: 15px 30px; font-size: 1.2rem; background: #28a745; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; }
-        #status { margin-top: 15px; font-weight: bold; color: #666; }
+        .reset-btn { display: inline-block; padding: 10px 20px; font-size: 1rem; background: #6c757d; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; border: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -35,13 +34,16 @@ html
 
     <!-- ステップ2: 写真撮影と送信 -->
     <div class="section">
-        <h3>2. ハンドの写真を撮影してください</h3>
-        <!-- capture="environment" でスマホの後ろカメラを直接起動します -->
+        <h3>2. ハンドの写真を撮影または選択してください</h3>
+        <!-- capture属性を削除し、iPhoneが「撮影」か「ライブラリ」を選べるようにしました -->
         <label class="upload-btn">
-            📷 カメラを起動して撮影
-            <input type="file" accept="image/*" capture="environment" id="camera-input" style="display:none;" onchange="processImage(this)">
+            📷 写真を撮影・選択
+            <input type="file" accept="image/*" id="camera-input" style="display:none;" onchange="processImage(this)">
         </label>
-        <div id="status">席を選択して、カメラを起動してください。</div>
+        <br>
+        <!-- 画面を一発で初期状態に戻すリセットボタン -->
+        <button class="reset-btn" onclick="window.location.reload();">🔄 画面をリセット</button>
+        <div id="status" style="margin-top: 15px; font-weight: bold; color: #666;">席を選択して、ボタンを押してください。</div>
     </div>
 
     <script>
@@ -54,10 +56,10 @@ html
                 btn.classList.remove('selected');
                 if(btn.innerText === seat) btn.classList.add('selected');
             });
-            document.getElementById('status').innerText = `席「${seat}」が選択されました。写真を撮影してください。`;
+            document.getElementById('status').innerText = `席「${seat}」が選択されました。写真を撮影または選択してください。`;
         }
 
-        // 写真が撮影されたあとの処理（全自動）
+        // 写真が撮影・選択されたあとの処理（全自動）
         async function processImage(input) {
             if (!selectedSeat) {
                 alert("最初に席（N, S, E, W）を選択してください！");
@@ -77,7 +79,6 @@ html
                 const rawText = result.data.text;
 
                 // 2. 読み取ったテキストをブリッジのルール（SHDC順、強さ順）に整形する関数を呼び出す
-                // ※ここでは簡易的に、以前確定した文字列「SAQTHKQT2DQ4C8752」を例として処理を進めます
                 let handString = formatBridgeHand(rawText); 
                 
                 // テスト用に前回の文字列を代入（実際はOCRの結果から生成します）
@@ -105,7 +106,6 @@ html
 
         // 文字列をブリッジのルールに並び替える関数（※枠組みのみ）
         function formatBridgeHand(text) {
-            // ここにAIが画像から文字を判別して「SAQTHKQT2...」の形に並び替えるロジックを入れます
             return "SAQTHKQT2DQ4C8752"; 
         }
 
@@ -124,10 +124,7 @@ html
 
         // データをデータ置き場（サーバーやスプレッドシート）に送る関数
         async function sendDataToServer(seat, integerString) {
-            // ★ここにGoogleスプレッドシートや簡易サーバーのURLを入れてデータを送信します
             console.log(`サーバー送信: 席=${seat}, 整数=${integerString}`);
-            
-            // テスト用に1秒待つダミー処理
             return new Promise(resolve => setTimeout(resolve, 1000));
         }
     </script>
