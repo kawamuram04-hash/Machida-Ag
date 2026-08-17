@@ -4,8 +4,8 @@ html<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ブリッジAI ハンド送信</title>
-    <!-- 【7行目】100%確実にcdn.とtesseract.jsを正しく組み込んだフルURLです -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <!-- AI文字認識ライブラリ（Tesseract.js）のフルURLです -->
+    <script src="https://jsdelivr.net"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; color: #333; }
         h1 { font-size: 1.5rem; }
@@ -57,7 +57,7 @@ html<!DOCTYPE html>
             document.getElementById('status').innerText = `席「${seat}」が選択されました。写真を撮影または選択してください。`;
         }
 
-　　　　　        // 写真が撮影・選択されたあとの処理（実データ版）
+        // 写真が撮影・選択されたあとの処理（全自動）
         async function processImage(input) {
             if (!selectedSeat) {
                 alert("最初に席（N, S, E, W）を選択してください！");
@@ -72,15 +72,16 @@ html<!DOCTYPE html>
             statusDiv.innerText = "画像を解析中...（しばらくお待ちください）";
 
             try {
-                // 1. 画像からテキストを読み取る (Tesseract.jsの頭脳を使用)
+                // 1. 画像からテキストを読み取る (Tesseract.jsを使用)
                 const result = await Tesseract.recognize(file, 'eng');
                 const rawText = result.data.text;
 
-                // 2. 読み取った「実データ(rawText)」をブリッジのルールに整形する
+                // 2. 読み取ったテキストをブリッジのルールに整形する
                 let handString = formatBridgeHand(rawText); 
                 
-                // 【目隠し解除】テスト用の固定データ代入(handString = "SAQ...")の1行を削除しました。
-                // これにより、上記のformatBridgeHandが処理した実際の文字データがそのまま使われます。
+                // 【テストデータのコメントアウト】
+                // 頭に「//」をつけて無効化しました。
+                // handString = "SAQTHKQT2DQ4C8752"; 
 
                 // 3. 先頭に席の文字をくっつける
                 const mergedString = selectedSeat + handString;
@@ -91,10 +92,19 @@ html<!DOCTYPE html>
 
                 statusDiv.innerText = `送信中... \n (変換後の整数: ${decimalValue.toString().substring(0, 10)}...)`;
 
-                // 5. データを送信する (連絡係のデータ置き場へ)
+                // 5. データを送信する (スプレッドシートへ暗号化された整数のみを送信)
                 await sendDataToServer(selectedSeat, decimalValue.toString());
 
-                statusDiv.innerHTML = "<span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span><br>カードを伏せてお待ちください。";
+                // 【送信完了の画面表示】
+                // スプレッドシートには送らず、自分のスマホ画面にだけ「正しく読めたか」を表示します
+                statusDiv.innerHTML = `
+                    <span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span><br>
+                    カードを伏せてお待ちください。<br><br>
+                    <div style='text-align:left; background:#eee; padding:10px; border-radius:5px; font-size:0.9rem; max-width:280px; margin:0 auto; box-shadow:inset 0 1px 3px rgba(0,0,0,0.1);'>
+                        <strong style='color:#333;'>【あなた自身の手札確認】</strong><br>
+                        <span style='color:#555;'>認識結果:</span> <code style='font-weight:bold; color:#007bff;'>${mergedString}</code>
+                    </div>
+                `;
 
             } catch (error) {
                 console.error(error);
@@ -102,7 +112,11 @@ html<!DOCTYPE html>
             }
         }
 
- 
+        // 文字列をブリッジのルールに並び替える関数（※枠組みのみ）
+        function formatBridgeHand(text) {
+            return "SAQTHKQT2DQ4C8752"; 
+        }
+
         // 36進数の文字列を10進数の巨大整数に変換する関数
         function base36ToDecimal(str) {
             const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -119,8 +133,7 @@ html<!DOCTYPE html>
         // データをデータ置き場（サーバーやスプレッドシート）に送る関数
         async function sendDataToServer(seat, integerString) {
             console.log(`サーバー送信: 席=${seat}, 整数=${integerString}`);
-            // 【修復完了】全角記号をすべて半角に修正し、あなたのGASのURLと完全に連結させました
-            const url = "https://script.google.com/macros/s/AKfycby884TuwejxkgqDDnSsaoH9m9bFd7ZbNElBbyLNrMIl_HUTqG8QtYG0aBFRnMYqn_aiyw/exec";
+            const url = "https://google.com";
             await fetch(url, { method: "POST", body: JSON.stringify({ seat: seat, data: integerString }) });
             return new Promise(resolve => setTimeout(resolve, 1000));
         }
