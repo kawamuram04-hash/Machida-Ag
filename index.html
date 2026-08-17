@@ -57,7 +57,7 @@ html<!DOCTYPE html>
             document.getElementById('status').innerText = `席「${seat}」が選択されました。写真を撮影または選択してください。`;
         }
 
-        // 写真が撮影・選択されたあとの処理（実データ版）
+　　　　　        // 写真が撮影・選択されたあとの処理（実データ版）
         async function processImage(input) {
             if (!selectedSeat) {
                 alert("最初に席（N, S, E, W）を選択してください！");
@@ -102,10 +102,10 @@ html<!DOCTYPE html>
             }
         }
 
-        // 文字列をブリッジのルールに並び替える関数（※枠組みのみ）
-        function formatBridgeHand(text) {
-            return "SAQTHKQT2DQ4C8752"; 
-        }
+        //// 文字列をブリッジのルールに並び替える関数（※枠組みのみ）
+        //function formatBridgeHand(text) {
+   　　　//    return "SAQTHKQT2DQ4C8752"; 
+        //}
 
         // 36進数の文字列を10進数の巨大整数に変換する関数
         function base36ToDecimal(str) {
