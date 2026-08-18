@@ -1,4 +1,4 @@
-html<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +6,6 @@ html<!DOCTYPE html>
     <title>ブリッジAI ハンド送信</title>
     <!-- 【7行目】100%確実にcdn.とtesseract.jsを正しく組み込んだフルURLです -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <!-- AI文字認識ライブラリ（Tesseract.js）のフルURLです -->
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; color: #333; }
         h1 { font-size: 1.5rem; }
@@ -19,9 +18,7 @@ html<!DOCTYPE html>
     </style>
 </head>
 <body>
-
     <h1>♣ ブリッジAI ハンド送信 ♦</h1>
-
     <!-- ステップ1: 席の選択 -->
     <div class="section">
         <h3>1. 自分の席を選んでください</h3>
@@ -32,7 +29,6 @@ html<!DOCTYPE html>
             <button class="seat-btn" onclick="selectSeat('W')">W</button>
         </div>
     </div>
-
     <!-- ステップ2: 写真撮影と送信 -->
     <div class="section">
         <h3>2. ハンドの写真を撮影または選択してください</h3>
@@ -44,10 +40,8 @@ html<!DOCTYPE html>
         <button class="reset-btn" onclick="window.location.reload();">🔄 画面をリセット</button>
         <div id="status" style="margin-top: 15px; font-weight: bold; color: #666;">席を選択して、ボタンを押してください。</div>
     </div>
-
     <script>
         let selectedSeat = "";
-
         // 席ボタンが押されたときの処理
         function selectSeat(seat) {
             selectedSeat = seat;
@@ -58,7 +52,6 @@ html<!DOCTYPE html>
             document.getElementById('status').innerText = `席「${seat}」が選択されました。写真を撮影または選択してください。`;
         }
 
-　　　　　        // 写真が撮影・選択されたあとの処理（実データ版）
         // 写真が撮影・選択されたあとの処理（全自動）
         async function processImage(input) {
             if (!selectedSeat) {
@@ -66,45 +59,31 @@ html<!DOCTYPE html>
                 input.value = ""; // 入力をリセット
                 return;
             }
-
             const file = input.files[0]; // 1つ目のファイルを確実に取得
             if (!file) return;
-
             const statusDiv = document.getElementById('status');
             statusDiv.innerText = "画像を解析中...（しばらくお待ちください）";
-
             try {
-                // 1. 画像からテキストを読み取る (Tesseract.jsの頭脳を使用)
                 // 1. 画像からテキストを読み取る (Tesseract.jsを使用)
                 const result = await Tesseract.recognize(file, 'eng');
                 const rawText = result.data.text;
 
-                // 2. 読み取った「実データ(rawText)」をブリッジのルールに整形する
                 // 2. 読み取ったテキストをブリッジのルールに整形する
                 let handString = formatBridgeHand(rawText); 
-
-                // 【目隠し解除】テスト用の固定データ代入(handString = "SAQ...")の1行を削除しました。
-                // これにより、上記のformatBridgeHandが処理した実際の文字データがそのまま使われます。
-                // 【テストデータのコメントアウト】
-                // 頭に「//」をつけて無効化しました。
+                
+                // 【テストデータのコメントアウト】頭に「//」をつけて無効化しました。
                 // handString = "SAQTHKQT2DQ4C8752"; 
 
                 // 3. 先頭に席の文字をくっつける
                 const mergedString = selectedSeat + handString;
                 statusDiv.innerText = `文字列化成功: ${mergedString} \n 整数に変換中...`;
-
                 // 4. 36進数を10進数の整数（BigInt）に変換
                 const decimalValue = base36ToDecimal(mergedString);
-
                 statusDiv.innerText = `送信中... \n (変換後の整数: ${decimalValue.toString().substring(0, 10)}...)`;
-
-                // 5. データを送信する (連絡係のデータ置き場へ)
                 // 5. データを送信する (スプレッドシートへ暗号化された整数のみを送信)
                 await sendDataToServer(selectedSeat, decimalValue.toString());
-
-                statusDiv.innerHTML = "<span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span><br>カードを伏せてお待ちください。";
-                // 【送信完了の画面表示】
-                // スプレッドシートには送らず、自分のスマホ画面にだけ「正しく読めたか」を表示します
+                
+                // 【送信完了の画面表示】スプレッドシートには送らず、自分のスマホ画面にだけ「正しく読めたか」を表示します
                 statusDiv.innerHTML = `
                     <span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span><br>
                     カードを伏せてお待ちください。<br><br>
@@ -113,19 +92,16 @@ html<!DOCTYPE html>
                         <span style='color:#555;'>認識結果:</span> <code style='font-weight:bold; color:#007bff;'>${mergedString}</code>
                     </div>
                 `;
-
             } catch (error) {
                 console.error(error);
                 statusDiv.innerHTML = "<span style='color:red;'>エラーが発生しました。もう一度撮影してください。</span>";
             }
         }
-
  
         // 文字列をブリッジのルールに並び替える関数（※枠組みのみ）
         function formatBridgeHand(text) {
             return "SAQTHKQT2DQ4C8752"; 
         }
-
         // 36進数の文字列を10進数の巨大整数に変換する関数
         function base36ToDecimal(str) {
             const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -138,12 +114,9 @@ html<!DOCTYPE html>
             }
             return result;
         }
-
-        // データをデータ置き場（サーバーやスプレッドシート）に送る関数
+        // データをデータ置き場（スプレッドシート）に送る関数
         async function sendDataToServer(seat, integerString) {
             console.log(`サーバー送信: 席=${seat}, 整数=${integerString}`);
-            // 【修復完了】全角記号をすべて半角に修正し、あなたのGASのURLと完全に連結させました
-            const url = "https://script.google.com/macros/s/AKfycby884TuwejxkgqDDnSsaoH9m9bFd7ZbNElBbyLNrMIl_HUTqG8QtYG0aBFRnMYqn_aiyw/exec";
             const url = "https://google.com";
             await fetch(url, { method: "POST", body: JSON.stringify({ seat: seat, data: integerString }) });
             return new Promise(resolve => setTimeout(resolve, 1000));
