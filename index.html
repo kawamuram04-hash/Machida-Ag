@@ -4,25 +4,27 @@ html<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ブリッジAI ハンド送信</title>
-    <!-- AI文字認識ライブラリ（Tesseract.js）のフルURLです -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="https://jsdelivr.net"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; color: #333; }
-        h1 { font-size: 1.5rem; }
+        h1 { font-size: 1.5rem; margin-bottom: 5px; }
+        .version-info { font-size: 0.8rem; color: #666; margin-bottom: 20px; font-weight: bold; }
         .section { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .btn-group { display: flex; justify-content: space-around; margin-top: 10px; }
-        /* Androidの大きな指でもタップしやすいようにボタンの高さを少し広げました */
         .seat-btn { padding: 18px 20px; font-size: 1.2rem; font-weight: bold; border: 2px solid #ccc; border-radius: 5px; background: white; cursor: pointer; width: 22%; -webkit-tap-highlight-color: transparent; }
         .seat-btn.selected { background: #007bff; color: white; border-color: #0056b3; }
         .upload-btn { display: inline-block; padding: 18px 30px; font-size: 1.2rem; background: #28a745; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; -webkit-tap-highlight-color: transparent; }
         .reset-btn { display: inline-block; padding: 10px 20px; font-size: 1rem; background: #6c757d; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; border: none; font-weight: bold; }
+        .manual-box { display: none; margin-top: 20px; background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffeeba; }
+        .text-input { width: 85%; padding: 12px; font-size: 1.1rem; border: 2px solid #ccc; border-radius: 5px; text-transform: uppercase; font-family: monospace; font-weight: bold; margin-bottom: 10px; }
+        .send-btn { padding: 12px 25px; font-size: 1.1rem; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <h1>♣ ブリッジAI ハンド送信 ♦</h1>
+    <div class="version-info">Version: 2026/08/19-A (実データ・エラーコード対応版)</div>
 
-    <!-- ステップ1: 席の選択 -->
     <div class="section">
         <h3>1. 自分の席を選んでください</h3>
         <div class="btn-group">
@@ -33,7 +35,6 @@ html<!DOCTYPE html>
         </div>
     </div>
 
-    <!-- ステップ2: 写真撮影と送信 -->
     <div class="section">
         <h3>2. ハンドの写真を撮影または選択してください</h3>
         <label class="upload-btn">
@@ -42,13 +43,22 @@ html<!DOCTYPE html>
         </label>
         <br>
         <button class="reset-btn" onclick="window.location.reload();">🔄 画面をリセット</button>
-        <div id="status" style="margin-top: 15px; font-weight: bold; color: #666;">席を選択して、ボタンを押してください。</div>
+        
+        <div id="manual-input-section" class="manual-box">
+            <h4 style="color: #856404; margin-top:0;">📷 認識失敗のため手動入力に切り替わりました</h4>
+            <input type="text" id="manual-text" class="text-input" placeholder="ここにハンドを入力">
+            <br>
+            <button class="send-btn" onclick="processManualInput()">✉️ 手動入力データを送信</button>
+        </div>
+
+        <div id="status" style="margin-top: 15px; font-weight: bold; color: #666; white-space: pre-wrap; line-height: 1.6;">席を選択して、ボタンを押してください。</div>
     </div>
 
     <script>
         let selectedSeat = "";
+        let errorCount = 0;
+        let errorCode = 0;
 
-        // 席ボタンが押されたときの処理
         function selectSeat(seat) {
             selectedSeat = seat;
             document.querySelectorAll('.seat-btn').forEach(btn => {
@@ -58,73 +68,85 @@ html<!DOCTYPE html>
             document.getElementById('status').innerText = `席「${seat}」が選択されました。写真を撮影または選択してください。`;
         }
 
-        // 写真が撮影・選択されたあとの処理（全自動）
         async function processImage(input) {
-            if (!selectedSeat) {
-                alert("最初に席（N, S, E, W）を選択してください！");
-                input.value = ""; // 入力をリセット
-                return;
-            }
-
-            // AndroidとiPhoneの両方で確実に1つ目の画像ファイルをキャッチする記述に統一
-            const file = input.files[0]; 
+            if (!selectedSeat) { alert("最初に席（N, S, E, W）を選択してください！"); input.value = ""; return; }
+            const file = input.files[0];
             if (!file) return;
-
             const statusDiv = document.getElementById('status');
-            statusDiv.innerText = "画像を解析中...（しばらくお待ちください）";
-
+            
             try {
-                // 1. 画像からテキストを読み取る (Tesseract.jsを使用)
+                errorCode = 10;
+                statusDiv.innerText = `[Code:${errorCode}] 画像ファイルを読み込みました。`;
+                await new Promise(res => setTimeout(res, 500));
+
+                errorCode = 20;
+                statusDiv.innerText = `[Code:${errorCode}] AI文字認識エンジンを起動中...`;
                 const result = await Tesseract.recognize(file, 'eng');
                 const rawText = result.data.text;
 
-                // 2. 読み取った生のテキスト（rawText）をそのまま次の関数へ渡します（目隠し完全解除）
+                errorCode = 30;
                 let handString = formatBridgeHand(rawText); 
+                if (!handString || handString === "READ_ERROR") throw new Error();
 
-                // 3. 先頭に席の文字をくっつける
                 const mergedString = selectedSeat + handString;
-                statusDiv.innerText = `文字列化成功: ${mergedString} \n 整数に変換中...`;
-
-                // 4. 36進数を10進数の整数（BigInt）に変換
+                
+                errorCode = 40;
+                statusDiv.innerText = `[Code:${errorCode}] 文字列化成功: ${mergedString}\n10進数に変換中...`;
+                await new Promise(res => setTimeout(res, 500));
                 const decimalValue = base36ToDecimal(mergedString);
 
-                statusDiv.innerText = `送信中... \n (変換後の整数: ${decimalValue.toString().substring(0, 10)}...)`;
-
-                // 5. データを送信する (スプレッドシートへ暗号化された整数のみを送信)
+                errorCode = 50;
+                statusDiv.innerText = `[Code:${errorCode}] スプレッドシートへ送信中...`;
                 await sendDataToServer(selectedSeat, decimalValue.toString());
 
-                // 【送信完了の画面表示】自分のスマホ画面にだけ「AIがどう文字を読んだか」を表示します
                 statusDiv.innerHTML = `
-                    <span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span><br>
-                    カードを伏せてお待ちください。<br><br>
-                    <div style='text-align:left; background:#eee; padding:10px; border-radius:5px; font-size:0.9rem; max-width:280px; margin:0 auto; box-shadow:inset 0 1px 3px rgba(0,0,0,0.1);'>
-                        <strong style='color:#333;'>【あなた自身の手札確認】</strong><br>
-                        <span style='color:#555;'>AIの文字認識結果:</span><br>
-                        <code style='font-weight:bold; color:#007bff; word-break:break-all;'>${mergedString}</code>
-                    </div>
-                `;
-
+                    <span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span><br>カードを伏せてお待ちください。<br><br>
+                    <div style='text-align:left; background:#eee; padding:10px; border-radius:5px; font-size:0.9rem; max-width:280px; margin:0 auto;'>
+                        <strong>【あなた自身の手札確認】</strong><br>認識結果: <code style='font-weight:bold; color:#007bff; word-break:break-all;'>${mergedString}</code>
+                    </div>`;
             } catch (error) {
-                console.error(error);
-                statusDiv.innerHTML = "<span style='color:red;'>エラーが発生しました。もう一度撮影してください。</span>";
+                errorCount++;
+                statusDiv.innerHTML = `<span style='color:red;'>【エラー発生 (コード: ${errorCode})】</span><br>解析に失敗しました。もう一度お試しください。`;
+                if (errorCount >= 2) {
+                    document.getElementById('manual-input-section').style.display = "block";
+                    statusDiv.innerHTML += "<br><br><span style='color:#856404; font-weight:bold;'>⚠️ 2回失敗したため、手動入力フォームが使えます。</span>";
+                }
             }
         }
 
-        // 文字列をブリッジのルールに並び替える関数（※実データ対応化）
+        async function processManualInput() {
+            const inputField = document.getElementById('manual-text');
+            let rawText = inputField.value;
+            const statusDiv = document.getElementById('status');
+            if (!rawText) { alert("ハンドを入力してください！"); return; }
+            statusDiv.innerText = "手動入力データを処理中...";
+            
+            try {
+                errorCode = 60;
+                let handString = formatBridgeHand(rawText);
+                const mergedString = selectedSeat + handString;
+                errorCode = 70;
+                const decimalValue = base36ToDecimal(mergedString);
+                errorCode = 80;
+                statusDiv.innerText = `[Code:${errorCode}] 手動入力データを送信中...`;
+                await sendDataToServer(selectedSeat, decimalValue.toString());
+
+                statusDiv.innerHTML = `
+                    <span style='color:green; font-size:1.5rem;'>✓ 手動送信完了！</span><br>カードを伏せてお待ちください。<br><br>
+                    <div style='text-align:left; background:#eee; padding:10px; border-radius:5px; font-size:0.9rem; max-width:280px; margin:0 auto;'>
+                        <strong>【あなた自身の手札確認】</strong><br>手動入力結果: <code style='font-weight:bold; color:#007bff;'>${mergedString}</code>
+                    </div>`;
+                document.getElementById('manual-input-section').style.display = "none";
+            } catch (e) {
+                statusDiv.innerHTML = `<span style='color:red;'>【手動送信エラー (コード: ${errorCode})】</span>`;
+            }
+        }
+
         function formatBridgeHand(text) {
-            // 写真から読み取った英数字（大文字小文字スペース含む）を、一度すべて「スペースなしの大文字」に整えます
             let cleanText = text.replace(/\s+/g, "").toUpperCase();
-            
-            // 【重要】もし写真から何も読めなかった場合は、システムがクラッシュしないように一時的に仮データを返します
-            if (!cleanText) {
-                return "SAQTHKQT2DQ4C8752";
-            }
-            
-            // AIが写真から読み取った「生の英数字の塊」をそのまま返します（ここから並び替えロジックを作り込んでいきます）
-            return cleanText;
+            return cleanText ? cleanText : "READ_ERROR";
         }
 
-        // 36進数の文字列を10進数の巨大整数に変換する関数
         function base36ToDecimal(str) {
             const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             let result = BigInt(0);
@@ -137,12 +159,10 @@ html<!DOCTYPE html>
             return result;
         }
 
-        // データをデータ置き場（スプレッドシート）に送る関数
         async function sendDataToServer(seat, integerString) {
-            console.log(`サーバー送信: 席=${seat}, 整数=${integerString}`);
             const url = "https://google.com";
             await fetch(url, { method: "POST", body: JSON.stringify({ seat: seat, data: integerString }) });
-            return new Promise(resolve => setTimeout(resolve, 1000));
+            return new Promise(res => setTimeout(res, 1000));
         }
     </script>
 </body>
