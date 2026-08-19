@@ -1,10 +1,11 @@
-html<!DOCTYPE html>
+html  V8.19.23
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ブリッジAI ハンド送信</title>
-    <script src="https://npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; color: #333; }
         h1 { font-size: 1.5rem; margin-bottom: 5px; }
@@ -22,7 +23,7 @@ html<!DOCTYPE html>
 </head>
 <body>
     <h1>♣ ブリッジAI ハンド送信 ♦</h1>
-    <div class="version-info">Version: 2026/08/19-C (本番URL書き換え対応版)</div>
+    <div class="version-info">Version: 2026/08/19-F (ライブラリURL完全修正版)</div>
     <div class="section">
         <h3>1. 自分の席を選んでください</h3>
         <div class="btn-group">
@@ -66,6 +67,7 @@ html<!DOCTYPE html>
             const file = input.files[0];
             if (!file) return;
             const statusDiv = document.getElementById('status');
+            const inputField = document.getElementById('manual-text');
             
             try {
                 errorCode = 10;
@@ -75,8 +77,12 @@ html<!DOCTYPE html>
                 statusDiv.innerText = `[Code:${errorCode}] AI文字認識エンジンを起動中...`;
                 const result = await Tesseract.recognize(file, 'eng');
                 const rawText = result.data.text;
+                
                 errorCode = 30;
                 let handString = formatBridgeHand(rawText); 
+                if (handString !== "READ_ERROR") {
+                    inputField.value = handString; // 読めた文字をテキストボックスへ渡す
+                }
                 if (!handString || handString === "READ_ERROR") throw new Error();
                 const mergedString = selectedSeat + handString;
                 
@@ -93,7 +99,7 @@ html<!DOCTYPE html>
                         <strong>【あなた自身の手札確認】</strong><br>認識結果: <code style='font-weight:bold; color:#007bff; word-break:break-all;'>${mergedString}</code>
                     </div>`;
             } catch (error) {
-                statusDiv.innerHTML = `<span style='color:red;'>【写真エラー (コード: ${errorCode})】</span><br>スマホのセキュリティ制限により写真解析がブロックされました。上の黄色いフォームから「手動入力」で送信してください。`;
+                statusDiv.innerHTML = `<span style='color:red;'>【写真エラー (コード: ${errorCode})】</span><br>文字認識が不完全か、ブロックされました。下の黄色いフォームに読めた文字を引き継ぎましたので、修正して手動送信してください。`;
             }
         }
         async function processManualInput() {
@@ -123,7 +129,7 @@ html<!DOCTYPE html>
             }
         }
         function formatBridgeHand(text) {
-            let cleanText = text.replace(/\s+/g, "").toUpperCase();
+            let cleanText = text.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
             return cleanText ? cleanText : "READ_ERROR";
         }
         function base36ToDecimal(str) {
