@@ -1,4 +1,4 @@
-html    V8.19 2315
+html    V8.20 0050
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -173,7 +173,7 @@ html    V8.19 2315
         }
 
         async function sendDataToServer(seat, integerString) {
-            const url = "https://docs.google.com/spreadsheets/d/1UzAozQix3MHwjEaAN8VmAccq3SPFBqx1QmsrxLpHqTA/edit?usp=sharing"; // ★ここに本物の長いURLを貼り付けます
+            const url = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec"; // ★ここに本物の長いURLを貼り付けます
             await fetch(url, { method: "POST", body: JSON.stringify({ seat: seat, data: integerString }) });
             return new Promise(res => setTimeout(res, 1000));
         }
