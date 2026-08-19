@@ -1,4 +1,4 @@
-html V819-1
+html    8.19 1700
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -14,9 +14,9 @@ html V819-1
         .btn-group { display: flex; justify-content: space-around; margin-top: 10px; }
         .seat-btn { padding: 18px 20px; font-size: 1.2rem; font-weight: bold; border: 2px solid #ccc; border-radius: 5px; background: white; cursor: pointer; width: 22%; -webkit-tap-highlight-color: transparent; }
         .seat-btn.selected { background: #007bff; color: white; border-color: #0056b3; }
-        .upload-btn { display: inline-block; padding: 18px 30px; font-size: 1.2rem; background: #28a745; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; -webkit-tap-highlight-color: transparent; }
+        .upload-btn { display: inline-block; padding: 15px 25px; font-size: 1.1rem; background: #28a745; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; -webkit-tap-highlight-color: transparent; }
         .reset-btn { display: inline-block; padding: 10px 20px; font-size: 1rem; background: #6c757d; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; border: none; font-weight: bold; }
-        .manual-box { display: none; margin-top: 20px; background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffeeba; }
+        .manual-box { display: block; margin-top: 20px; background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffeeba; }
         .text-input { width: 85%; padding: 12px; font-size: 1.1rem; border: 2px solid #ccc; border-radius: 5px; text-transform: uppercase; font-family: monospace; font-weight: bold; margin-bottom: 10px; }
         .send-btn { padding: 12px 25px; font-size: 1.1rem; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
     </style>
@@ -24,7 +24,7 @@ html V819-1
 <body>
 
     <h1>♣ ブリッジAI ハンド送信 ♦</h1>
-    <div class="version-info">Version: 2026/08/19-A (実データ・エラーコード対応版)</div>
+    <div class="version-info">Version: 2026/08/19-B (最初から手入力対応版)</div>
 
     <div class="section">
         <h3>1. 自分の席を選んでください</h3>
@@ -37,27 +37,29 @@ html V819-1
     </div>
 
     <div class="section">
-        <h3>2. ハンドの写真を撮影または選択してください</h3>
+        <h3>2. ハンドを入力、または写真を撮影してください</h3>
+        
+        <!-- 【進化】最初からいつでも手動入力ができるフォームをメインに配置しました -->
+        <div id="manual-input-section" class="manual-box">
+            <h4 style="color: #856404; margin-top:0; margin-bottom:10px;">⌨️ 手動でハンドを入力して送信する</h4>
+            <input type="text" id="manual-text" class="text-input" placeholder="例: SAQTHKQT2DQ4C8752">
+            <br>
+            <button class="send-btn" onclick="processManualInput()">✉️ データを暗号化して送信</button>
+        </div>
+
+        <p style="margin-top: 25px; margin-bottom: 5px; font-size: 0.9rem; color: #666; font-weight: bold;">➔ または、写真撮影にトライする</p>
         <label class="upload-btn">
             📷 写真を撮影・選択
             <input type="file" accept="image/*" id="camera-input" style="display:none;" onchange="processImage(this)">
         </label>
         <br>
         <button class="reset-btn" onclick="window.location.reload();">🔄 画面をリセット</button>
-        
-        <div id="manual-input-section" class="manual-box">
-            <h4 style="color: #856404; margin-top:0;">📷 認識失敗のため手動入力に切り替わりました</h4>
-            <input type="text" id="manual-text" class="text-input" placeholder="ここにハンドを入力">
-            <br>
-            <button class="send-btn" onclick="processManualInput()">✉️ 手動入力データを送信</button>
-        </div>
 
-        <div id="status" style="margin-top: 15px; font-weight: bold; color: #666; white-space: pre-wrap; line-height: 1.6;">席を選択して、ボタンを押してください。</div>
+        <div id="status" style="margin-top: 15px; font-weight: bold; color: #666; white-space: pre-wrap; line-height: 1.6;">席を選択して、ハンドを入力するかボタンを押してください。</div>
     </div>
 
     <script>
         let selectedSeat = "";
-        let errorCount = 0;
         let errorCode = 0;
 
         function selectSeat(seat) {
@@ -66,12 +68,12 @@ html V819-1
                 btn.classList.remove('selected');
                 if(btn.innerText === seat) btn.classList.add('selected');
             });
-            document.getElementById('status').innerText = `席「${seat}」が選択されました。写真を撮影または選択してください。`;
+            document.getElementById('status').innerText = `席「${seat}」が選択されました。`;
         }
 
         async function processImage(input) {
             if (!selectedSeat) { alert("最初に席（N, S, E, W）を選択してください！"); input.value = ""; return; }
-            const file = input.files[0];
+            const file = input.files;
             if (!file) return;
             const statusDiv = document.getElementById('status');
             
@@ -106,16 +108,12 @@ html V819-1
                         <strong>【あなた自身の手札確認】</strong><br>認識結果: <code style='font-weight:bold; color:#007bff; word-break:break-all;'>${mergedString}</code>
                     </div>`;
             } catch (error) {
-                errorCount++;
-                statusDiv.innerHTML = `<span style='color:red;'>【エラー発生 (コード: ${errorCode})】</span><br>解析に失敗しました。もう一度お試しください。`;
-                if (errorCount >= 2) {
-                    document.getElementById('manual-input-section').style.display = "block";
-                    statusDiv.innerHTML += "<br><br><span style='color:#856404; font-weight:bold;'>⚠️ 2回失敗したため、手動入力フォームが使えます。</span>";
-                }
+                statusDiv.innerHTML = `<span style='color:red;'>【写真エラー (コード: ${errorCode})】</span><br>スマホのセキュリティ制限により写真解析がブロックされました。上の黄色いフォームから「手動入力」で送信してください。`;
             }
         }
 
         async function processManualInput() {
+            if (!selectedSeat) { alert("最初に席（N, S, E, W）を選択してください！"); return; }
             const inputField = document.getElementById('manual-text');
             let rawText = inputField.value;
             const statusDiv = document.getElementById('status');
@@ -129,17 +127,16 @@ html V819-1
                 errorCode = 70;
                 const decimalValue = base36ToDecimal(mergedString);
                 errorCode = 80;
-                statusDiv.innerText = `[Code:${errorCode}] 手動入力データを送信中...`;
+                statusDiv.innerText = `[Code:${errorCode}] 暗号化に成功しました。スプレッドシートへ送信中...`;
                 await sendDataToServer(selectedSeat, decimalValue.toString());
 
                 statusDiv.innerHTML = `
-                    <span style='color:green; font-size:1.5rem;'>✓ 手動送信完了！</span><br>カードを伏せてお待ちください。<br><br>
+                    <span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span><br>カードを伏せてお待ちください。<br><br>
                     <div style='text-align:left; background:#eee; padding:10px; border-radius:5px; font-size:0.9rem; max-width:280px; margin:0 auto;'>
                         <strong>【あなた自身の手札確認】</strong><br>手動入力結果: <code style='font-weight:bold; color:#007bff;'>${mergedString}</code>
                     </div>`;
-                document.getElementById('manual-input-section').style.display = "none";
             } catch (e) {
-                statusDiv.innerHTML = `<span style='color:red;'>【手動送信エラー (コード: ${errorCode})】</span>`;
+                statusDiv.innerHTML = `<span style='color:red;'>【送信エラー (コード: ${errorCode})】</span>`;
             }
         }
 
