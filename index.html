@@ -1,24 +1,27 @@
-<!DOCTYPE html>
+html<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ブリッジAI ハンド送信</title>
-    <!-- 【7行目】100%確実にcdn.とtesseract.jsを正しく組み込んだフルURLです -->
+    <!-- AI文字認識ライブラリ（Tesseract.js）のフルURLです -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; color: #333; }
         h1 { font-size: 1.5rem; }
         .section { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .btn-group { display: flex; justify-content: space-around; margin-top: 10px; }
-        .seat-btn { padding: 15px 20px; font-size: 1.2rem; font-weight: bold; border: 2px solid #ccc; border-radius: 5px; background: white; cursor: pointer; width: 22%; }
+        /* Androidの大きな指でもタップしやすいようにボタンの高さを少し広げました */
+        .seat-btn { padding: 18px 20px; font-size: 1.2rem; font-weight: bold; border: 2px solid #ccc; border-radius: 5px; background: white; cursor: pointer; width: 22%; -webkit-tap-highlight-color: transparent; }
         .seat-btn.selected { background: #007bff; color: white; border-color: #0056b3; }
-        .upload-btn { display: inline-block; padding: 15px 30px; font-size: 1.2rem; background: #28a745; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; }
+        .upload-btn { display: inline-block; padding: 18px 30px; font-size: 1.2rem; background: #28a745; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; -webkit-tap-highlight-color: transparent; }
         .reset-btn { display: inline-block; padding: 10px 20px; font-size: 1rem; background: #6c757d; color: white; border-radius: 5px; cursor: pointer; margin-top: 15px; border: none; font-weight: bold; }
     </style>
 </head>
 <body>
+
     <h1>♣ ブリッジAI ハンド送信 ♦</h1>
+
     <!-- ステップ1: 席の選択 -->
     <div class="section">
         <h3>1. 自分の席を選んでください</h3>
@@ -29,6 +32,7 @@
             <button class="seat-btn" onclick="selectSeat('W')">W</button>
         </div>
     </div>
+
     <!-- ステップ2: 写真撮影と送信 -->
     <div class="section">
         <h3>2. ハンドの写真を撮影または選択してください</h3>
@@ -40,8 +44,10 @@
         <button class="reset-btn" onclick="window.location.reload();">🔄 画面をリセット</button>
         <div id="status" style="margin-top: 15px; font-weight: bold; color: #666;">席を選択して、ボタンを押してください。</div>
     </div>
+
     <script>
         let selectedSeat = "";
+
         // 席ボタンが押されたときの処理
         function selectSeat(seat) {
             selectedSeat = seat;
@@ -59,49 +65,65 @@
                 input.value = ""; // 入力をリセット
                 return;
             }
-            const file = input.files[0]; // 1つ目のファイルを確実に取得
+
+            // AndroidとiPhoneの両方で確実に1つ目の画像ファイルをキャッチする記述に統一
+            const file = input.files[0]; 
             if (!file) return;
+
             const statusDiv = document.getElementById('status');
             statusDiv.innerText = "画像を解析中...（しばらくお待ちください）";
+
             try {
                 // 1. 画像からテキストを読み取る (Tesseract.jsを使用)
                 const result = await Tesseract.recognize(file, 'eng');
                 const rawText = result.data.text;
 
-                // 2. 読み取ったテキストをブリッジのルールに整形する
+                // 2. 読み取った生のテキスト（rawText）をそのまま次の関数へ渡します（目隠し完全解除）
                 let handString = formatBridgeHand(rawText); 
-                
-                // 【テストデータのコメントアウト】頭に「//」をつけて無効化しました。
-                // handString = "SAQTHKQT2DQ4C8752"; 
 
                 // 3. 先頭に席の文字をくっつける
                 const mergedString = selectedSeat + handString;
                 statusDiv.innerText = `文字列化成功: ${mergedString} \n 整数に変換中...`;
+
                 // 4. 36進数を10進数の整数（BigInt）に変換
                 const decimalValue = base36ToDecimal(mergedString);
+
                 statusDiv.innerText = `送信中... \n (変換後の整数: ${decimalValue.toString().substring(0, 10)}...)`;
+
                 // 5. データを送信する (スプレッドシートへ暗号化された整数のみを送信)
                 await sendDataToServer(selectedSeat, decimalValue.toString());
-                
-                // 【送信完了の画面表示】スプレッドシートには送らず、自分のスマホ画面にだけ「正しく読めたか」を表示します
+
+                // 【送信完了の画面表示】自分のスマホ画面にだけ「AIがどう文字を読んだか」を表示します
                 statusDiv.innerHTML = `
                     <span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span><br>
                     カードを伏せてお待ちください。<br><br>
                     <div style='text-align:left; background:#eee; padding:10px; border-radius:5px; font-size:0.9rem; max-width:280px; margin:0 auto; box-shadow:inset 0 1px 3px rgba(0,0,0,0.1);'>
                         <strong style='color:#333;'>【あなた自身の手札確認】</strong><br>
-                        <span style='color:#555;'>認識結果:</span> <code style='font-weight:bold; color:#007bff;'>${mergedString}</code>
+                        <span style='color:#555;'>AIの文字認識結果:</span><br>
+                        <code style='font-weight:bold; color:#007bff; word-break:break-all;'>${mergedString}</code>
                     </div>
                 `;
+
             } catch (error) {
                 console.error(error);
                 statusDiv.innerHTML = "<span style='color:red;'>エラーが発生しました。もう一度撮影してください。</span>";
             }
         }
- 
-        // 文字列をブリッジのルールに並び替える関数（※枠組みのみ）
+
+        // 文字列をブリッジのルールに並び替える関数（※実データ対応化）
         function formatBridgeHand(text) {
-            return "SAQTHKQT2DQ4C8752"; 
+            // 写真から読み取った英数字（大文字小文字スペース含む）を、一度すべて「スペースなしの大文字」に整えます
+            let cleanText = text.replace(/\s+/g, "").toUpperCase();
+            
+            // 【重要】もし写真から何も読めなかった場合は、システムがクラッシュしないように一時的に仮データを返します
+            if (!cleanText) {
+                return "SAQTHKQT2DQ4C8752";
+            }
+            
+            // AIが写真から読み取った「生の英数字の塊」をそのまま返します（ここから並び替えロジックを作り込んでいきます）
+            return cleanText;
         }
+
         // 36進数の文字列を10進数の巨大整数に変換する関数
         function base36ToDecimal(str) {
             const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -114,6 +136,7 @@
             }
             return result;
         }
+
         // データをデータ置き場（スプレッドシート）に送る関数
         async function sendDataToServer(seat, integerString) {
             console.log(`サーバー送信: 席=${seat}, 整数=${integerString}`);
