@@ -134,8 +134,7 @@ html  8.20.1505
         }
 
         async function sendDataToServer(seat, rawString) {
-            const url = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec
-"; // ★ここに本物の長いURLを貼り付けます
+const url = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
             // 【テスト変更】GAS側が最も読み取りやすいシンプルな文字形式に直して送信
             await fetch(url, { method: "POST", body: JSON.stringify({ seat: seat, data: rawString }) });
             return new Promise(res => setTimeout(res, 1000));
