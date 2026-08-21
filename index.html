@@ -1,4 +1,4 @@
-html    New V0.1 082101140
+html  V0.2
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -6,29 +6,30 @@ html    New V0.1 082101140
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ブリッジAI 整数送信</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 20px; background: #f0f2f5; color: #333; }
-        h1 { font-size: 1.5rem; margin-bottom: 5px; }
-        .version-info { font-size: 0.8rem; color: #666; margin-bottom: 25px; font-weight: bold; }
-        .section { background: white; padding: 25px 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .text-input { width: 90%; padding: 15px 10px; font-size: 1.2rem; border: 2px solid #ccc; border-radius: 5px; font-family: monospace; font-weight: bold; text-align: center; margin-bottom: 20px; box-sizing: border-box; }
-        .send-btn { padding: 16px 25px; font-size: 1.2rem; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 90%; -webkit-tap-highlight-color: transparent; }
+        body { font-family: sans-serif; text-align: center; padding: 15px; background: #f0f2f5; color: #333; }
+        h1 { font-size: 1.4rem; margin-bottom: 5px; }
+        .version-info { font-size: 0.8rem; color: #666; margin-bottom: 20px; font-weight: bold; }
+        .section { background: white; padding: 20px 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        /* ①②入力フィールドをiPhone SEの縦画面でも全文字（28桁）が余裕で見える幅とサイズに拡大 */
+        .text-input { width: 100%; padding: 15px 5px; font-size: 0.95rem; border: 2px solid #ccc; border-radius: 5px; font-family: monospace; font-weight: bold; text-align: center; margin-bottom: 20px; box-sizing: border-box; letter-spacing: -0.5px; }
+        .send-btn { padding: 16px 25px; font-size: 1.2rem; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         .send-btn:active { background: #0056b3; }
-        #status { margin-top: 20px; font-weight: bold; color: #666; white-space: pre-wrap; line-height: 1.6; }
+        /* ③送信完了画面が右に寄らないよう、全体を完全に中央揃え(center)に固定 */
+        #status { margin-top: 20px; font-weight: bold; color: #666; white-space: pre-wrap; line-height: 1.6; text-align: center; display: flex; flex-direction: column; align-items: center; }
     </style>
 </head>
 <body>
 
     <h1>♣ ブリッジAI 整数送信 ♦</h1>
-    <div class="version-info">Version: 2026/08/21-B (整数コピペ専用版)</div>
+    <div class="version-info">Version: 2026/08/21-C (iPhoneSE最適化版)</div>
 
     <div class="section">
-        <h3 style="margin-top: 0; color: #007bff;">📋 AIの計算結果（10進整数）を貼り付けてください</h3>
+        <h3 style="margin-top: 0; color: #007bff; font-size: 1.1rem;">📋 AIの計算結果（10進整数）を貼り付けてください</h3>
         
-        <!-- 10進整数を受け付ける専用の入力ボックス -->
-        <input type="text" id="decimal-input" class="text-input" inputmode="numeric" pattern="[0-9]*" placeholder="例: 29009857...">
+        <!-- ②薄い文字（プレースホルダー）を完全に「空白」に修正 -->
+        <input type="text" id="decimal-input" class="text-input" inputmode="numeric" pattern="[0-9]*" placeholder="">
         <br>
         
-        <!-- 送信一発ボタン -->
         <button class="send-btn" onclick="sendDecimalData()">✉️ スプレッドシートへ送信</button>
 
         <div id="status">ボックスに数字を貼り付けて、ボタンを押してください。</div>
@@ -40,7 +41,6 @@ html    New V0.1 082101140
             let rawText = inputField.value.trim();
             const statusDiv = document.getElementById('status');
             
-            // 数字以外の文字（スペースや改行など）を完全に排除
             let cleanNumber = rawText.replace(/[^0-9]/g, "");
             
             if (!cleanNumber) {
@@ -51,7 +51,6 @@ html    New V0.1 082101140
             statusDiv.innerText = "通信基地局（GAS）へ送信中...";
             
             try {
-                // 【確定した本物URL】席情報は不要なため、seatは空文字 "" で送信します
                 const url = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
                 
                 await fetch(url, { 
@@ -62,19 +61,19 @@ html    New V0.1 082101140
                     }) 
                 });
 
+                /* ③右寄りを解消し、中央で美しく折り返される（または1行に収まる）ように配置を修正 */
                 statusDiv.innerHTML = `
-                    <span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span><br>
-                    スプレッドシートに整数が記録されました。<br><br>
-                    <div style='text-align:left; background:#eee; padding:10px; border-radius:5px; font-size:0.9rem; max-width:280px; margin:0 auto; word-break:break-all;'>
-                        <strong>【送信されたデータ】</strong><br>
-                        <code>${cleanNumber}</code>
+                    <span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span>
+                    <span style='font-size:0.9rem; margin-top:5px;'>スプレッドシートに記録されました。</span><br>
+                    <div style='text-align:center; background:#eee; padding:10px; border-radius:5px; font-size:0.85rem; width:100%; box-sizing:border-box; word-break:break-all; font-family:monospace;'>
+                        <strong>【送信データ】</strong><br>
+                        ${cleanNumber}
                     </div>`;
                 
-                // 次の入力のためにボックスを空にする
                 inputField.value = "";
                 
             } catch (e) {
-                statusDiv.innerHTML = "<span style='color:red;'>❌ 送信エラー（コード: 90）</span><br>通信に失敗しました。電波状況を確認してください。";
+                statusDiv.innerHTML = "<span style='color:red;'>❌ 送信エラー（コード: 90）</span><br><span style='font-size:0.9rem;'>通信に失敗しました。</span>";
             }
         }
     </script>
