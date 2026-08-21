@@ -1,4 +1,4 @@
-html  V0.2
+html　　V0.3 821 1730
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -10,23 +10,22 @@ html  V0.2
         h1 { font-size: 1.4rem; margin-bottom: 5px; }
         .version-info { font-size: 0.8rem; color: #666; margin-bottom: 20px; font-weight: bold; }
         .section { background: white; padding: 20px 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        /* ①②入力フィールドをiPhone SEの縦画面でも全文字（28桁）が余裕で見える幅とサイズに拡大 */
         .text-input { width: 100%; padding: 15px 5px; font-size: 0.95rem; border: 2px solid #ccc; border-radius: 5px; font-family: monospace; font-weight: bold; text-align: center; margin-bottom: 20px; box-sizing: border-box; letter-spacing: -0.5px; }
         .send-btn { padding: 16px 25px; font-size: 1.2rem; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         .send-btn:active { background: #0056b3; }
-        /* ③送信完了画面が右に寄らないよう、全体を完全に中央揃え(center)に固定 */
-        #status { margin-top: 20px; font-weight: bold; color: #666; white-space: pre-wrap; line-height: 1.6; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        /* ③ 右寄り・分断バグを根絶するために、表示領域を完全なセンター固定構造に指定 */
+        #status { margin-top: 20px; font-weight: bold; color: #666; text-align: center; width: 100%; }
+        .result-box { text-align: center; background: #eee; padding: 12px 10px; border-radius: 5px; font-size: 0.85rem; width: 100%; box-sizing: border-box; word-break: break-all; font-family: monospace; margin: 10px auto 0 auto; display: block; }
     </style>
 </head>
 <body>
 
     <h1>♣ ブリッジAI 整数送信 ♦</h1>
-    <div class="version-info">Version: 2026/08/21-C (iPhoneSE最適化版)</div>
+    <div class="version-info">Version: 2026/08/21-D (表示位置バグ修正版)</div>
 
     <div class="section">
         <h3 style="margin-top: 0; color: #007bff; font-size: 1.1rem;">📋 AIの計算結果（10進整数）を貼り付けてください</h3>
         
-        <!-- ②薄い文字（プレースホルダー）を完全に「空白」に修正 -->
         <input type="text" id="decimal-input" class="text-input" inputmode="numeric" pattern="[0-9]*" placeholder="">
         <br>
         
@@ -51,7 +50,7 @@ html  V0.2
             statusDiv.innerText = "通信基地局（GAS）へ送信中...";
             
             try {
-                const url = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
+　　　const url = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
                 
                 await fetch(url, { 
                     method: "POST", 
@@ -61,19 +60,19 @@ html  V0.2
                     }) 
                 });
 
-                /* ③右寄りを解消し、中央で美しく折り返される（または1行に収まる）ように配置を修正 */
+                /* ③ Safariの変な右寄せを無効化し、文字も数字も完全に真ん中にどっしり配置されるように書き換え */
                 statusDiv.innerHTML = `
-                    <span style='color:green; font-size:1.5rem;'>✓ 送信完了！</span>
-                    <span style='font-size:0.9rem; margin-top:5px;'>スプレッドシートに記録されました。</span><br>
-                    <div style='text-align:center; background:#eee; padding:10px; border-radius:5px; font-size:0.85rem; width:100%; box-sizing:border-box; word-break:break-all; font-family:monospace;'>
-                        <strong>【送信データ】</strong><br>
-                        ${cleanNumber}
+                    <div style='color:green; font-size:1.5rem; margin-bottom:5px;'>✓ 送信完了！</div>
+                    <div style='font-size:0.9rem; color:#333; margin-bottom:10px;'>スプレッドシートに記録されました。</div>
+                    <div class='result-box'>
+                        <div style='font-weight:bold; margin-bottom:5px; color:#333;'>【送信データ】</div>
+                        <div style='color:#007bff; font-size:0.9rem;'>${cleanNumber}</div>
                     </div>`;
                 
                 inputField.value = "";
                 
             } catch (e) {
-                statusDiv.innerHTML = "<span style='color:red;'>❌ 送信エラー（コード: 90）</span><br><span style='font-size:0.9rem;'>通信に失敗しました。</span>";
+                statusDiv.innerHTML = "<div style='color:red; font-size:1.1rem;'>❌ 送信エラー（コード: 90）</div><div style='font-size:0.9rem; margin-top:5px;'>通信に失敗しました。</div>";
             }
         }
     </script>
