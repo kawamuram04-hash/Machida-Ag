@@ -3,7 +3,7 @@ html<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ブリッジAI 整数送信</title>
+    <title>ブリッジAI ハンド送信</title>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 15px; background: #f0f2f5; color: #333; }
         h1 { font-size: 1.4rem; margin-bottom: 5px; }
@@ -14,13 +14,13 @@ html<!DOCTYPE html>
         .send-btn:active { background: #0056b3; }
         
         /* 連絡係用のデザインスタイル */
-        .manager-toggle-btn { padding: 8px 15px; font-size: 0.9rem; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 15px; }
+        .manager-toggle-btn { padding: 10px 20px; font-size: 1rem; background: #6c757d; color: white; border: none; border-radius: 5px; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
         .manager-box { display: none; background: #fff3cd; padding: 20px 15px; border-radius: 10px; border: 2px solid #ffeeba; margin-bottom: 20px; text-align: left; }
-        .start-btn { padding: 16px 25px; font-size: 1.2rem; background: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 20px; box-sizing: border-box; }
-        .start-btn:active { background: #1e7e34; }
         .select-group { margin-bottom: 15px; }
         .select-group label { font-weight: bold; display: block; margin-bottom: 5px; font-size: 0.95rem; color: #856404; }
         .select-custom { width: 100%; padding: 12px; font-size: 1.1rem; border: 2px solid #ffeeba; border-radius: 5px; background: white; font-weight: bold; }
+        .start-btn { padding: 16px 25px; font-size: 1.2rem; background: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; box-sizing: border-box; }
+        .start-btn:active { background: #1e7e34; }
         
         #status { margin-top: 20px; font-weight: bold; color: #666; text-align: center; width: 100%; }
         .result-box { text-align: center; background: #eee; padding: 12px 10px; border-radius: 5px; font-size: 0.85rem; width: 100%; box-sizing: border-box; word-break: break-all; font-family: monospace; margin: 10px auto 0 auto; display: block; }
@@ -28,27 +28,34 @@ html<!DOCTYPE html>
 </head>
 <body>
 
-    <h1>♣ ブリッジAI 整数送信 ♦</h1>
-    <div class="version-info">Version: 2026/08/26-X (連絡係UI統合版)</div>
+    <h1>♣ ブリッジAI ハンド送信 ♦</h1>
+    <div class="version-info">Version: 2026/08/26-Z (26ビット分割UI完成版)</div>
 
-    <!-- 3人共通画面の最上部にある、連絡係画面への切り替えスイッチ -->
+    <!-- ③ 通常時は「連絡係メニューを開く」ボタンを表示 -->
     <button class="manager-toggle-btn" id="toggle-btn" onclick="toggleManagerMode()">👤 連絡係メニューを開く</button>
 
-    <!-- 連絡係ボタンが押された時にだけ、シュッと現れる初期情報入力画面 -->
+    <!-- 👑 連絡係専用画面 -->
     <div id="manager-section" class="manager-box">
         <h3 style="margin-top: 0; color: #856404; text-align: center; border-bottom: 1px dashed #ffeeba; padding-bottom: 10px;">👑 連絡係 専用コントロールパネル</h3>
         
-        <!-- 【開始ボタン】画面の最初であることがイメージされる最上部に配置 -->
-        <label style="font-weight: bold; display: block; margin-bottom: 5px; font-size: 0.95rem; color: #856404;">▼ ステップ1：ゲームを開始する</label>
-        <button class="start-btn" onclick="startNewGame()">🆕 新しいゲームを開始 (暗号キーK生成)</button>
-
         <div class="select-group">
-            <label>▼ ステップ2：ディーラー（親）の選択</label>
+            <label>▼ ステップ1：ディーラー（親）の選択</label>
             <select id="dealer-select" class="select-custom">
                 <option value="N">N (北)</option>
                 <option value="S">S (南)</option>
                 <option value="E">E (東)</option>
                 <option value="W">W (西)</option>
+            </select>
+        </div>
+
+        <!-- ④ 初期情報に「AI（ロボット）の席」を追加 -->
+        <div class="select-group">
+            <label>▼ ステップ2：AI (ロボット) の席を選択</label>
+            <select id="ai-seat-select" class="select-custom">
+                <option value="W">W (西 - デフォルト)</option>
+                <option value="N">N (北)</option>
+                <option value="S">S (南)</option>
+                <option value="E">E (東)</option>
             </select>
         </div>
 
@@ -60,44 +67,56 @@ html<!DOCTYPE html>
                 <option value="標準">標準 (Standard)</option>
             </select>
         </div>
+
+        <label style="font-weight: bold; display: block; margin-bottom: 5px; font-size: 0.95rem; color: #856404;">▼ ステップ4：設定を確定してゲームを開始</label>
+        <button class="start-btn" onclick="startNewGame()">🆕 新しいゲームを開始 (前後分割キー生成)</button>
     </div>
 
-    <!-- 全員共通のデータ送信セクション -->
-    <div class="section">
-        <h3 id="input-title" style="margin-top: 0; color: #007bff; font-size: 1.1rem;">📋 AIの計算結果（10進整数）を貼り付けてください</h3>
+    <!-- 👥 全員共通のデータ送信セクション（⑤ 連絡係画面が開いている時は非表示になります） -->
+    <div id="common-input-section" class="section">
+        <h3 id="input-title" style="margin-top: 0; color: #007bff; font-size: 1.1rem; line-height: 1.5;">📋 AIの計算結果（ハンドの文字列）を貼り付けて送信ボタンを押してください</h3>
         
-        <input type="text" id="decimal-input" class="text-input" inputmode="numeric" pattern="[0-9]*" placeholder="">
+        <input type="text" id="decimal-input" class="text-input" placeholder="">
         <br>
         
-        <button class="send-btn" onclick="sendDecimalData()">✉️ スプレッドシートへ送信</button>
-
-        <div id="status">ボックスに数字を貼り付けて、ボタンを押してください。</div>
+        <button class="send-btn" onclick="sendDecimalData()">✉️ 送信</button>
     </div>
 
+    <!-- 送信状態の表示エリア -->
+    <div id="status" class="section" style="background: none; box-shadow: none; padding: 0;">ボックスに文字を貼り付けて、ボタンを押してください。</div>
+
     <script>
-        // 連絡係画面の表示・非表示を切り替える関数
+        // ③ ⑤ 連絡係画面と通常画面をスムーズに切り替える関数
         function toggleManagerMode() {
             const managerBox = document.getElementById('manager-section');
+            const commonSection = document.getElementById('common-input-section');
             const toggleBtn = document.getElementById('toggle-btn');
+            const statusDiv = document.getElementById('status');
             
             if (managerBox.style.display === "block") {
+                // 連絡係画面を閉じて、通常画面に戻る
                 managerBox.style.display = "none";
+                commonSection.style.display = "block"; // ⑤ 通常の入力ボックスを再表示
                 toggleBtn.innerText = "👤 連絡係メニューを開く";
                 toggleBtn.style.background = "#6c757d";
+                statusDiv.innerText = "通常画面に戻りました。ボックスに文字を貼り付けて、ボタンを押してください。";
             } else {
+                // 連絡係画面を開く
                 managerBox.style.display = "block";
-                toggleBtn.innerText = "❌ 連絡係メニューを閉じる";
-                toggleBtn.style.background = "#dc3545";
+                commonSection.style.display = "none"; // ⑤ 下の入力ボックスを非表示にする
+                toggleBtn.innerText = "⬅ 戻る"; // ③ 普通の戻るボタンに変更
+                toggleBtn.style.background = "#007bff";
+                statusDiv.innerText = "初期情報を入力し、開始ボタンを押してください。";
             }
         }
 
-        // 連絡係が「開始ボタン」を押したときの処理
         async function startNewGame() {
             const statusDiv = document.getElementById('status');
             const dealer = document.getElementById('dealer-select').value;
+            const aiSeat = document.getElementById('ai-seat-select').value;
             const style = document.getElementById('style-select').value;
             
-            statusDiv.innerText = "通信基地局（GAS）に新ゲーム開始を要請中...\n(シートのリセットと暗号キーKを自動生成しています)";
+            statusDiv.innerText = "通信基地局（GAS）に新ゲーム開始を要請中...\n(26ビット分割キーK1・K2を自動生成しています)";
             
             try {
                 const url = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
@@ -107,13 +126,14 @@ html<!DOCTYPE html>
                     body: JSON.stringify({
                         action: "start_game",
                         dealer: dealer,
+                        ai_seat: aiSeat,
                         style: style
                     })
                 });
                 const result = await response.json();
                 
                 if(result.status === "success") {
-                    statusDiv.innerHTML = "<span style='color:green; font-size:1.3rem;'>✓ ゲームが正常に開始されました！</span><br>暗号キーKが生成されました。各自手札を送信してください。";
+                    statusDiv.innerHTML = "<span style='color:green; font-size:1.3rem;'>✓ ゲームが正常に開始されました！</span><br>「⬅ 戻る」ボタンを押して、各自の手札データを送信してください。";
                 } else {
                     statusDiv.innerHTML = `<span style='color:red;'>❌ エラー: ${result.message}</span>`;
                 }
@@ -122,16 +142,13 @@ html<!DOCTYPE html>
             }
         }
 
-        // 10進整数の一般送信関数
         async function sendDecimalData() {
             const inputField = document.getElementById('decimal-input');
             let rawText = inputField.value.trim();
             const statusDiv = document.getElementById('status');
             
-            let cleanNumber = rawText.replace(/[^0-9]/g, "");
-            
-            if (!cleanNumber) {
-                alert("送信する10進整数（数字）を入力してください！");
+            if (!rawText) {
+                alert("送信するハンドの文字列を入力してください！");
                 return;
             }
             
@@ -144,7 +161,7 @@ html<!DOCTYPE html>
                     method: "POST", 
                     body: JSON.stringify({ 
                         seat: "", 
-                        data: cleanNumber 
+                        data: rawText 
                     }) 
                 });
 
@@ -153,7 +170,7 @@ html<!DOCTYPE html>
                     <div style='font-size:0.9rem; color:#333; margin-bottom:10px;'>スプレッドシートに記録されました。</div>
                     <div class='result-box'>
                         <div style='font-weight:bold; margin-bottom:5px; color:#333;'>【送信データ】</div>
-                        <div style='color:#007bff; font-size:0.9rem;'>${cleanNumber}</div>
+                        <div style='color:#007bff; font-size:0.9rem;'>${rawText}</div>
                     </div>`;
                 
                 inputField.value = "";
