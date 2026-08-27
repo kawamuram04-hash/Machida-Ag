@@ -121,14 +121,17 @@ html<!DOCTYPE html>
             try {
                 const url = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
                 
+                // 確実にGASへ「action: start_game」だと認識させるための安全なデータ送信形式
+                const payload = {
+                    action: "start_game",
+                    dealer: dealer,
+                    ai_seat: aiSeat,
+                    style: style
+                };
+                
                 const response = await fetch(url, {
                     method: "POST",
-                    body: JSON.stringify({
-                        action: "start_game",
-                        dealer: dealer,
-                        ai_seat: aiSeat,
-                        style: style
-                    })
+                    body: JSON.stringify(payload)
                 });
                 const result = await response.json();
                 
