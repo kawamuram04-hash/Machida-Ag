@@ -1,101 +1,184 @@
-html   828 1405
+html　　　8281435
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ブリッジAI ビッド起動</title>
+    <title>ブリッジAI ハンド送信</title>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 15px; background: #f0f2f5; color: #333; }
         h1 { font-size: 1.4rem; margin-bottom: 5px; }
         .version-info { font-size: 0.8rem; color: #666; margin-bottom: 20px; font-weight: bold; }
-        .section { background: white; padding: 20px 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: left; }
-        .action-btn { padding: 16px 25px; font-size: 1.2rem; background: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; box-sizing: border-box; text-align: center; margin-bottom: 15px; }
-        .action-btn:active { background: #1e7e34; }
-        .copy-btn { padding: 12px 20px; font-size: 1rem; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; box-sizing: border-box; text-align: center; margin-top: 10px; }
-        .copy-btn:active { background: #0056b3; }
-        .download-btn { padding: 12px 20px; font-size: 1rem; background: #17a2b8; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; box-sizing: border-box; text-align: center; margin-top: 10px; display: none; text-decoration: none; }
-        .download-btn:active { background: #117a8b; }
+        .section { background: white; padding: 20px 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .text-input { width: 100%; padding: 15px 5px; font-size: 0.95rem; border: 2px solid #ccc; border-radius: 5px; font-family: monospace; font-weight: bold; text-align: center; margin-bottom: 20px; box-sizing: border-box; letter-spacing: -0.5px; }
+        .send-btn { padding: 16px 25px; font-size: 1.2rem; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; box-sizing: border-box; }
+        .send-btn:active { background: #0056b3; }
         
-        #status { font-weight: bold; color: #666; text-align: center; margin-bottom: 15px; }
-        textarea { width: 100%; height: 200px; font-size: 0.9rem; padding: 10px; border: 2px solid #ccc; border-radius: 5px; box-sizing: border-box; resize: vertical; margin-top: 10px; display: none; font-family: monospace; }
-        .step-title { font-weight: bold; color: #007bff; margin-bottom: 5px; font-size: 1rem; }
+        .manager-toggle-btn { padding: 10px 20px; font-size: 1rem; background: #6c757d; color: white; border: none; border-radius: 5px; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
+        .manager-box { display: none; background: #fff3cd; padding: 20px 15px; border-radius: 10px; border: 2px solid #ffeeba; margin-bottom: 20px; text-align: left; }
+        .select-group { margin-bottom: 15px; }
+        .select-group label { font-weight: bold; display: block; margin-bottom: 5px; font-size: 0.95rem; color: #856404; }
+        .select-custom { width: 100%; padding: 12px; font-size: 1.1rem; border: 2px solid #ffeeba; border-radius: 5px; background: white; font-weight: bold; }
+        .start-btn { padding: 16px 25px; font-size: 1.2rem; background: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; box-sizing: border-box; }
+        .start-btn:active { background: #1e7e34; }
+        
+        #status { margin-top: 20px; font-weight: bold; color: #666; text-align: center; width: 100%; }
+        .result-box { text-align: center; background: #eee; padding: 12px 10px; border-radius: 5px; font-size: 0.85rem; width: 100%; box-sizing: border-box; word-break: break-all; font-family: monospace; margin: 10px auto 0 auto; display: block; }
     </style>
 </head>
 <body>
-    <h1>♣ ブリッジAI ビッド起動 (後半) ♦</h1>
-    <div class="version-info">Version: 2026/08/28-ZIP本番版</div>
-
-    <!-- 🚀 メインボタン -->
-    <button class="action-btn" onclick="fetchAiPromptAndZip()">⚡ AIの依頼文＆ZIPファイルを生成する</button>
+    <h1>♣ ブリッジAI ハンド送信 ♦</h1>
+    <div class="version-info">Version: 2026/08/28-本番版</div>
     
-    <div id="status">3人の手札送信が完了したら、上のボタンを押してください。</div>
-
-    <!-- 📄 結果出力エリア（最初は隠れており、成功するとシュッと現れます） -->
-    <div id="result-section" class="section" style="display: none;">
-        <div class="step-title">▼ ステップ1：手札ZIPファイルをスマホに保存</div>
-        <a id="dl-link" class="download-btn" download="game.zip">💾 game.zip をダウンロード</a>
+    <button class="manager-toggle-btn" id="toggle-btn" onclick="toggleManagerMode()">👤 連絡係メニューを開く</button>
+    
+    <!-- 👑 連絡係専用画面 -->
+    <div id="manager-section" class="manager-box">
+        <h3 style="margin-top: 0; color: #856404; text-align: center; border-bottom: 1px dashed #ffeeba; padding-bottom: 10px;">👑 連絡係 専用コントロールパネル</h3>
         
-        <div class="step-title" style="margin-top: 25px;">▼ ステップ2：Geminiへの依頼文をコピー</div>
-        <button class="copy-btn" onclick="copyPromptText()">📋 依頼文をクリップボードにコピー</button>
-        <textarea id="prompt-text" readonly></textarea>
+        <div class="select-group">
+            <label>▼ ステップ1：ディーラー（親）の選択</label>
+            <select id="dealer-select" class="select-custom">
+                <option value="N">N (北)</option>
+                <option value="S">S (南)</option>
+                <option value="E">E (東)</option>
+                <option value="W">W (西)</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <label>▼ ステップ2：AI (ロボット) の席を選択</label>
+            <select id="ai-seat-select" class="select-custom">
+                <option value="W">W (西 - デフォルト)</option>
+                <option value="N">N (北)</option>
+                <option value="S">S (南)</option>
+                <option value="E">E (東)</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <label>▼ ステップ3：AIのプレイスタイル選択</label>
+            <select id="style-select" class="select-custom">
+                <option value="積極的">積極的 (Aggressive)</option>
+                <option value="慎重">慎重 (Conservative)</option>
+                <option value="標準">標準 (Standard)</option>
+            </select>
+        </div>
+        <label style="font-weight: bold; display: block; margin-bottom: 5px; font-size: 0.95rem; color: #856404;">▼ ステップ4：設定を確定してゲームを開始</label>
+        <button class="start-btn" onclick="startNewGame()">🆕 新しいゲームを開始 (前後分割キー生成)</button>
     </div>
 
+    <!-- 👥 全員共通のデータ送信セクション -->
+    <div id="common-input-section" class="section">
+        <h3 id="input-title" style="margin-top: 0; color: #007bff; font-size: 1.1rem; line-height: 1.5;">📋 AIの計算結果（ハンドの文字列）を貼り付けて送信ボタンを押してください</h3>
+        <input type="text" id="decimal-input" class="text-input" placeholder="例: 101001...">
+        <br>
+        <button class="send-btn" onclick="sendDecimalData()">✉️ 送信</button>
+    </div>
+
+    <!-- 送信状態の表示エリア -->
+    <div id="status" class="section" style="background: none; box-shadow: none; padding: 0;">ボックスに文字を貼り付けて、ボタンを押してください。</div>
+
     <script>
-        // 🌟 共通設定：ご自身のWebアプリのURLを入れてください
+        // 🌟 共通設定：WebアプリのURLを入れてください
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
 
-        // GASからデータを受け取り、ZIPとプロンプトを展開する関数
-        async function fetchAiPromptAndZip() {
+        function toggleManagerMode() {
+            const managerBox = document.getElementById('manager-section');
+            const commonSection = document.getElementById('common-input-section');
+            const toggleBtn = document.getElementById('toggle-btn');
             const statusDiv = document.getElementById('status');
-            const resultSection = document.getElementById('result-section');
-            const dlLink = document.getElementById('dl-link');
-            const txtArea = document.getElementById('prompt-text');
             
-            statusDiv.innerHTML = "通信基地局（GAS）からAIの手札を逆算中...<br>(5行目のXOR計算からZIPファイルを錬成しています)";
-            resultSection.style.display = "none";
-            dlLink.style.display = "none";
-            txtArea.style.display = "none";
+            if (managerBox.style.display === "block") {
+                managerBox.style.display = "none";
+                commonSection.style.display = "block";
+                toggleBtn.innerText = "👤 連絡係メニューを開く";
+                toggleBtn.style.background = "#6c757d";
+                statusDiv.innerText = "通常画面に戻りました。ボックスに文字を貼り付けて、ボタンを押してください。";
+            } else {
+                managerBox.style.display = "block";
+                commonSection.style.display = "none";
+                toggleBtn.innerText = "⬅ 戻る";
+                toggleBtn.style.background = "#007bff";
+                statusDiv.innerText = "初期情報を入力し、開始ボタンを押してください。";
+            }
+        }
+
+        async function startNewGame() {
+            const statusDiv = document.getElementById('status');
+            const dealer = document.getElementById('dealer-select').value;
+            const aiSeat = document.getElementById('ai-seat-select').value;
+            const style = document.getElementById('style-select').value;
+            
+            statusDiv.innerText = "通信基地局（GAS）に新ゲーム開始を要請中...\n(26ビット分割キーK1・K2を自動生成しています)";
             
             try {
+                const payload = {
+                    action: "start_game",
+                    dealer: dealer,
+                    ai_seat: aiSeat,
+                    style: style
+                };
+                
                 const response = await fetch(GAS_URL, {
                     method: "POST",
-                    body: JSON.stringify({ action: "get_robot_bid" })
+                    body: JSON.stringify(payload)
                 });
                 const result = await response.json();
                 
-                if (result.status === "success") {
-                    statusDiv.innerHTML = "<span style='color:green; font-size:1.2rem;'>✓ 正常に生成されました！</span>";
-                    
-                    // 1. ZIPファイルのダウンロードリンクをセットして表示
-                    dlLink.href = result.zipData;
-                    dlLink.style.display = "block";
-                    
-                    // 2. プロンプトテキストをテキストエリアにセットして表示
-                    txtArea.value = result.prompt;
-                    txtArea.style.display = "block";
-                    
-                    // エリア全体を表示
-                    resultSection.style.display = "block";
+                if(result.status === "success") {
+                    statusDiv.innerHTML = "<span style='color:green; font-size:1.3rem;'>✓ ゲームが正常に開始されました！</span><br>「⬅ 戻る」ボタンを押して、各自の手札データを送信してください。";
                 } else {
                     statusDiv.innerHTML = `<span style='color:red;'>❌ エラー: ${result.message}</span>`;
                 }
             } catch (e) {
-                statusDiv.innerHTML = "<span style='color:red;'>❌ 通信エラー</span><br>データ取得に失敗しました。3人の送信が完了しているか確認してください。";
+                statusDiv.innerHTML = "<span style='color:red;'>❌ 通信エラー</span><br>新ゲームの開始リクエストに失敗しました。";
             }
         }
 
-        // テキストエリアの文字を一発でコピーする関数
-        function copyPromptText() {
-            const txtArea = document.getElementById('prompt-text');
-            txtArea.select();
-            txtArea.setSelectionRange(0, 99999); // スマホ用の選択範囲
+        async function sendDecimalData() {
+            const inputField = document.getElementById('decimal-input');
+            let rawText = inputField.value.trim();
+            const statusDiv = document.getElementById('status');
+            
+            let cleanBits = rawText.replace(/[^01]/g, "");
+            
+            if (cleanBits.length !== 52) {
+                alert("エラー：ハンドの文字列は52文字の「1」と「0」の並びで入力してください。（現在 " + cleanBits.length + " 文字）");
+                return;
+            }
+            
+            statusDiv.innerText = "通信基地局（GAS）へ送信中...";
+            
+            let part1Bits = cleanBits.substring(0, 26);
+            let part2Bits = cleanBits.substring(26, 52);
+            let int1 = parseInt(part1Bits, 2);
+            let int2 = parseInt(part2Bits, 2);
             
             try {
-                navigator.clipboard.writeText(txtArea.value);
-                alert("✓ 依頼文をコピーしました！そのままGeminiのチャット欄に貼り付けてください。");
-            } catch (err) {
-                alert("コピーに失敗しました。枠内の文字を長押しして直接コピーしてください。");
+                const payload = {
+                    action: "send_data",
+                    int1: int1,
+                    int2: int2,
+                    raw: cleanBits
+                };
+
+                const response = await fetch(GAS_URL, { 
+                    method: "POST", 
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                statusDiv.innerHTML = `
+                    <div style='color:green; font-size:1.5rem; margin-bottom:5px;'>✓ 送信完了！</div>
+                    <div style='font-size:0.9rem; color:#333; margin-bottom:10px;'>C列・D列に整数として記録されました。</div>
+                    <div class='result-box'>
+                        <div style='font-weight:bold; margin-bottom:2px;'>【変換後の10進整数】</div>
+                        前半(C列): <span style="color:#007bff">${int1}</span> / 後半(D列): <span style="color:#007bff">${int2}</span>
+                    </div>`;
+                
+                inputField.value = "";
+                
+            } catch (e) {
+                statusDiv.innerHTML = "<div style='color:red; font-size:1.1rem;'>❌ 送信エラー</div><div style='font-size:0.9rem; margin-top:5px;'>通信に失敗しました。</div>";
             }
         }
     </script>
