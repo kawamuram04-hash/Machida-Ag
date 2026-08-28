@@ -1,4 +1,4 @@
-html   828 2010
+html　　8282130
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -71,9 +71,9 @@ html   828 2010
         <button class="send-btn" onclick="processAndSendHand()">✉️ 送信</button>
     </div>
 
-    <div id="status" class="section" style="background: none; box-shadow: none; padding: 
-        <script>
-        // 🌟 共通設定：WebアプリのURLを入れてください
+    <div id="status" class="section" style="background: none; box-shadow: none; padding: 0;">手札テキストをボックスに貼り付けて、ボタンを押してください。</div>
+
+    <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
 
         function toggleManagerMode() {
@@ -97,7 +97,7 @@ html   828 2010
             }
         }
 
-        async function startNewGame() {
+                async function startNewGame() {
             const statusDiv = document.getElementById('status');
             const dealer = document.getElementById('dealer-select').value;
             const aiSeat = document.getElementById('ai-seat-select').value;
@@ -129,7 +129,7 @@ html   828 2010
             }
         }
 
-        async function processAndSendHand() {
+                async function processAndSendHand() {
             const inputField = document.getElementById('hand-text-input');
             let rawText = inputField.value.trim().toUpperCase();
             const statusDiv = document.getElementById('status');
