@@ -1,4 +1,4 @@
-html　　8282130
+html  829 2005
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -74,7 +74,7 @@ html　　8282130
     <div id="status" class="section" style="background: none; box-shadow: none; padding: 0;">手札テキストをボックスに貼り付けて、ボタンを押してください。</div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
+ const GAS_URL = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
 
         function toggleManagerMode() {
             const managerBox = document.getElementById('manager-section');
@@ -139,9 +139,10 @@ html　　8282130
                 return;
             }
             
-            statusDiv.innerText = "手札の文字列を解析中（安全確認システム稼働）...";
+            statusDiv.innerText = "手札の文字列を解析中（T統一システム稼働）...";
             
-            const ranks = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+            // Tを含む完全1文字ずつのマスタ配列（バグの起きない美しい並び）
+            const ranks = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
             const suits = ["S", "H", "D", "C"];
             let bits = Array(52).fill(0);
             
@@ -149,14 +150,14 @@ html　　8282130
             let matches = rawText.match(/([SHDC])\s*[:：]?\s*([^SHDC]*)/g);
             
             if (!matches) {
-                alert("エラー：手札の解析に失敗しました。形式（S: AQ10 H: KQ102...）が正しいか確認してください。");
+                alert("エラー：手札の解析に失敗しました。形式（S: AKT9 H: KQJ...）が正しいか確認してください。");
                 statusDiv.innerText = "送信を中断しました。形式を確認してください。";
                 return;
             }
             
             matches.forEach(m => {
                 let suit = m.trim().charAt(0);
-                let cards = m.replace(/^[SHDC]\s*[:：]?\s*/, "").replace(/[^AKQJ0-9]/g, "");
+                let cards = m.replace(/^[SHDC]\s*[:：]?\s*/, "").replace(/[^AKQJT0-9]/g, "");
                 suitsData[suit] = cards;
             });
             
@@ -165,11 +166,10 @@ html　　8282130
                 let data = suitsData[suit];
                 ranks.forEach((rank, rIdx) => {
                     let bitPosition = sIdx * 13 + rIdx;
-                    if (rank === "10") {
-                        if (data.includes("10")) { bits[bitPosition] = 1; totalCount++; }
-                    } else {
-                        let cleanData = data.replace(/10/g, "");
-                        if (cleanData.includes(rank)) { bits[bitPosition] = 1; totalCount++; }
+                    // 全カードが1文字なので、単純に含む（includes）だけで100%正確に判定可能！
+                    if (data.includes(rank)) {
+                        bits[bitPosition] = 1;
+                        totalCount++;
                     }
                 });
             });
