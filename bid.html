@@ -1,4 +1,4 @@
-html   828 1605
+html 9022100
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -14,88 +14,62 @@ html   828 1605
         .action-btn:active { background: #1e7e34; }
         .copy-btn { padding: 12px 20px; font-size: 1rem; background: #007bff; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; box-sizing: border-box; text-align: center; margin-top: 10px; }
         .copy-btn:active { background: #0056b3; }
-        .download-btn { padding: 12px 20px; font-size: 1rem; background: #17a2b8; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; box-sizing: border-box; text-align: center; margin-top: 10px; display: none; text-decoration: none; }
-        .download-btn:active { background: #117a8b; }
-        
         #status { font-weight: bold; color: #666; text-align: center; margin-bottom: 15px; }
-        textarea { width: 100%; height: 200px; font-size: 0.9rem; padding: 10px; border: 2px solid #ccc; border-radius: 5px; box-sizing: border-box; resize: vertical; margin-top: 10px; display: none; font-family: monospace; }
+        textarea { width: 100%; height: 250px; font-size: 0.9rem; padding: 10px; border: 2px solid #ccc; border-radius: 5px; box-sizing: border-box; resize: vertical; margin-top: 10px; display: none; font-family: monospace; }
         .step-title { font-weight: bold; color: #007bff; margin-bottom: 5px; font-size: 1rem; }
     </style>
 </head>
 <body>
     <h1>♣ ブリッジAI ビッド起動 (後半) ♦</h1>
-    <div class="version-info">Version: 2026/08/28-ZIP本番版</div>
+    <div class="version-info">Version: 2026/08/30-AI汎用テキスト合体版</div>
 
-    <!-- 🚀 メインボタン -->
-    <button class="action-btn" onclick="fetchAiPromptAndZip()">⚡ AIの依頼文＆ZIPファイルを生成する</button>
-    
+    <button class="action-btn" onclick="fetchAiPrompt()">⚡ AIの依頼文を生成する</button>
     <div id="status">3人の手札送信が完了したら、上のボタンを押してください。</div>
 
-    <!-- 📄 結果出力エリア（最初は隠れており、成功するとシュッと現れます） -->
     <div id="result-section" class="section" style="display: none;">
-        <div class="step-title">▼ ステップ1：手札ZIPファイルをスマホに保存</div>
-        <a id="dl-link" class="download-btn" download="game.zip">💾 game.zip をダウンロード</a>
-        
-        <div class="step-title" style="margin-top: 25px;">▼ ステップ2：AIシステムへの依頼文をコピー</div>
+        <div class="step-title">▼ コピーしてAIのチャット欄に貼り付けてください</div>
         <button class="copy-btn" onclick="copyPromptText()">📋 依頼文をクリップボードにコピー</button>
         <textarea id="prompt-text" readonly></textarea>
     </div>
 
     <script>
-        // 🌟 共通設定：ご自身のWebアプリのURLを入れてください
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyPiEIPpsg8CkvA3ekpZ2oQF71NYCwQzWY1OqohCg48B8-BQflw4I0Ec3cOM4nSxfxm7w/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwdwnQGs_IkcFUfTY6PT0xGqf7WYllBsfhuY-uiZjs9WpYP6aaMvDF8wYysEddzb0D2rA/exec";
 
-        // GASからデータを受け取り、ZIPとプロンプトを展開する関数
-        async function fetchAiPromptAndZip() {
+        async function fetchAiPrompt() {
             const statusDiv = document.getElementById('status');
             const resultSection = document.getElementById('result-section');
-            const dlLink = document.getElementById('dl-link');
             const txtArea = document.getElementById('prompt-text');
-            
-            statusDiv.innerHTML = "通信基地局（GAS）からAIの手札を逆算中...<br>(5行目のXOR計算からZIPファイルを錬成しています)";
+            statusDiv.innerHTML = "通信基地局（GAS）からAIの手札を逆算中...";
             resultSection.style.display = "none";
-            dlLink.style.display = "none";
             txtArea.style.display = "none";
-            
             try {
                 const response = await fetch(GAS_URL, {
                     method: "POST",
                     body: JSON.stringify({ action: "get_robot_bid" })
                 });
                 const result = await response.json();
-                
                 if (result.status === "success") {
                     statusDiv.innerHTML = "<span style='color:green; font-size:1.2rem;'>✓ 正常に生成されました！</span>";
-                    
-                    // 1. ZIPファイルのダウンロードリンクをセットして表示
-                    dlLink.href = result.zipData;
-                    dlLink.style.display = "block";
-                    
-                    // 2. プロンプトテキストをテキストエリアにセットして表示
                     txtArea.value = result.prompt;
                     txtArea.style.display = "block";
-                    
-                    // エリア全体を表示
                     resultSection.style.display = "block";
                 } else {
                     statusDiv.innerHTML = `<span style='color:red;'>❌ エラー: ${result.message}</span>`;
                 }
             } catch (e) {
-                statusDiv.innerHTML = "<span style='color:red;'>❌ 通信エラー</span><br>データ取得に失敗しました。3人の送信が完了しているか確認してください。";
+                statusDiv.innerHTML = "<span style='color:red;'>❌ 通信エラー</span>";
             }
         }
 
-        // テキストエリアの文字を一発でコピーする関数
         function copyPromptText() {
             const txtArea = document.getElementById('prompt-text');
             txtArea.select();
-            txtArea.setSelectionRange(0, 99999); // スマホ用の選択範囲
-            
+            txtArea.setSelectionRange(0, 99999);
             try {
                 navigator.clipboard.writeText(txtArea.value);
-                alert("✓ 依頼文をコピーしました！そのままAIシステムのチャット欄に貼り付けてください。");
+                alert("✓ 依頼文をコピーしました！AIのチャット欄にそのまま貼り付けてください。");
             } catch (err) {
-                alert("コピーに失敗しました。枠内の文字を長押しして直接コピーしてください。");
+                alert("枠内の文字を長押しして直接コピーしてください。");
             }
         }
     </script>
