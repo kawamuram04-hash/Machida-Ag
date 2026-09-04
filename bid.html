@@ -1,4 +1,4 @@
-html 904 1440
+html  904 1550
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -21,7 +21,7 @@ html 904 1440
 </head>
 <body>
     <h1>♣ ブリッジAI ビッド起動 (後半) ♦</h1>
-    <div class="version-info">Version: 2026/08/30-AI汎用テキスト合体版</div>
+    <div class="version-info">Version: 2026/09/03-AI汎用テキスト合体版(修正)</div>
 
     <button class="action-btn" onclick="fetchAiPrompt()">⚡ AIの依頼文を生成する</button>
     <div id="status">3人の手札送信が完了したら、上のボタンを押してください。</div>
@@ -33,7 +33,9 @@ html 904 1440
     </div>
 
     <script>
- const GAS_URL = "https://script.google.com/macros/s/AKfycbzM8f9g9CANqMOUFBO7EeiriLcAWGqVfYe4gcx8HsOjOuVz6q3yDUu0xiblDQo0kVK0FQ/exec";        
+        // 🌟 ご自身の本物のGASのURL（末尾が /exec のもの）を貼り付けてください
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzM8f9g9CANqMOUFBO7EeiriLcAWGqVfYe4gcx8HsOjOuVz6q3yDUu0xiblDQo0kVK0FQ/exec";
+
         async function fetchAiPrompt() {
             const statusDiv = document.getElementById('status');
             const resultSection = document.getElementById('result-section');
@@ -41,12 +43,12 @@ html 904 1440
             statusDiv.innerHTML = "通信基地局（GAS）からAIの手札を逆算中...";
             resultSection.style.display = "none";
             txtArea.style.display = "none";
+            
             try {
-                const response = await fetch(GAS_URL, {
-                    method: "POST",
-                    body: JSON.stringify({ action: "get_robot_bid" })
-                });
+                // 🌟 【最重要修正】GASのdoGetと完璧に通信を合わせるため、方法（method）の記述を完全撤廃
+                const response = await fetch(GAS_URL);
                 const result = await response.json();
+                
                 if (result.status === "success") {
                     statusDiv.innerHTML = "<span style='color:green; font-size:1.2rem;'>✓ 正常に生成されました！</span>";
                     txtArea.value = result.prompt;
@@ -56,7 +58,7 @@ html 904 1440
                     statusDiv.innerHTML = `<span style='color:red;'>❌ エラー: ${result.message}</span>`;
                 }
             } catch (e) {
-                statusDiv.innerHTML = "<span style='color:red;'>❌ 通信エラー</span>";
+                statusDiv.innerHTML = "<span style='color:red;'>❌ 通信エラー</span><br>データの取得に失敗しました。最新のURLが正しく貼られているか確認してください。";
             }
         }
 
