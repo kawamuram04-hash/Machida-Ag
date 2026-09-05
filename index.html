@@ -1,4 +1,4 @@
-html  904 1425
+html  905 1200
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -28,10 +28,11 @@ html  904 1425
 </head>
 <body>
     <h1>♣ ブリッジAI ハンド送信 ♦</h1>
-    <div class="version-info">Version: 2026/08/28-安全確認自動ビット変換版</div>
+    <div class="version-info">Version: 2026/09/04-T統一クリーン決定版</div>
     
     <button class="manager-toggle-btn" id="toggle-btn" onclick="toggleManagerMode()">👤 連絡係メニューを開く</button>
     
+    <!-- 👑 連絡係専用画面 -->
     <div id="manager-section" class="manager-box">
         <h3 style="margin-top: 0; color: #856404; text-align: center; border-bottom: 1px dashed #ffeeba; padding-bottom: 10px;">👑 連絡係 専用コントロールパネル</h3>
         <div class="select-group">
@@ -64,17 +65,21 @@ html  904 1425
         <button class="start-btn" onclick="startNewGame()">🆕  新しいゲームを開始 (前後分割キー生成)</button>
     </div>
 
+    <!-- 👥 全員共通のデータ送信セクション -->
     <div id="common-input-section" class="section">
         <h3 id="input-title" style="margin-top: 0; color: #007bff; font-size: 1.1rem; line-height: 1.5;">📋 AIがテキスト化した手札（S: AK...）をそのまま貼り付けて送信してください</h3>
-        <textarea id="hand-text-input" class="text-input" placeholder="例：S: AQ10 H: KQ102 D: Q4 C: 8752&#10;(大文字小文字、スペース、コロン等のズレは自動で処理されます)"></textarea>
+        <!-- 🌟 【No.1修正】プレースホルダー内の「10」を排除し、完全に「T」の例に書き換え -->
+        <textarea id="hand-text-input" class="text-input" placeholder="例：S: AKT9 H: KQJ2 D: Q4 C: 8752&#10;(大文字小文字、スペース、コロン等のズレは自動で処理されます)"></textarea>
         <br>
         <button class="send-btn" onclick="processAndSendHand()">✉️ 送信</button>
     </div>
 
+    <!-- 送信状態の表示エリア -->
     <div id="status" class="section" style="background: none; box-shadow: none; padding: 0;">手札テキストをボックスに貼り付けて、ボタンを押してください。</div>
 
     <script>
- const GAS_URL = "https://script.google.com/macros/s/AKfycbzM8f9g9CANqMOUFBO7EeiriLcAWGqVfYe4gcx8HsOjOuVz6q3yDUu0xiblDQo0kVK0FQ/exec";
+        // 🌟 後半画面（bid.html）に貼ったものと全く同じ本物の最新URLを貼り付けてください
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzM8f9g9CANqMOUFBO7EeiriLcAWGqVfYe4gcx8HsOjOuVz6q3yDUu0xiblDQo0kVK0FQ/exec";
 
         function toggleManagerMode() {
             const managerBox = document.getElementById('manager-section');
@@ -97,13 +102,13 @@ html  904 1425
             }
         }
 
-                async function startNewGame() {
+        async function startNewGame() {
             const statusDiv = document.getElementById('status');
             const dealer = document.getElementById('dealer-select').value;
             const aiSeat = document.getElementById('ai-seat-select').value;
             const style = document.getElementById('style-select').value;
             
-            statusDiv.innerText = "通信基地局（GAS）に新ゲーム開始を要請中...\n(26ビット分割キーK1・K2を自動生成しています)";
+            statusDiv.innerText = "通信基地局（GAS）に新ゲーム開始を要請中...";
             
             try {
                 const payload = {
@@ -125,11 +130,11 @@ html  904 1425
                     statusDiv.innerHTML = `<span style='color:red;'>❌ エラー: ${result.message}</span>`;
                 }
             } catch (e) {
-                statusDiv.innerHTML = "<span style='color:red;'>❌ 通信エラー</span><br>新ゲームの開始リクエストに失敗しました。";
+                statusDiv.innerHTML = "<span style='color:red;'>❌ 通信エラー</span><br>新ゲームの開始リクエストに失敗しました。最新のURLが正しく貼られているか確認してください。";
             }
         }
 
-                async function processAndSendHand() {
+        async function processAndSendHand() {
             const inputField = document.getElementById('hand-text-input');
             let rawText = inputField.value.trim().toUpperCase();
             const statusDiv = document.getElementById('status');
@@ -141,7 +146,6 @@ html  904 1425
             
             statusDiv.innerText = "手札の文字列を解析中（T統一システム稼働）...";
             
-            // Tを含む完全1文字ずつのマスタ配列（バグの起きない美しい並び）
             const ranks = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
             const suits = ["S", "H", "D", "C"];
             let bits = Array(52).fill(0);
@@ -166,7 +170,6 @@ html  904 1425
                 let data = suitsData[suit];
                 ranks.forEach((rank, rIdx) => {
                     let bitPosition = sIdx * 13 + rIdx;
-                    // 全カードが1文字なので、単純に含む（includes）だけで100%正確に判定可能！
                     if (data.includes(rank)) {
                         bits[bitPosition] = 1;
                         totalCount++;
@@ -176,7 +179,7 @@ html  904 1425
             
             if (totalCount !== 13) {
                 if (!confirm("警告：検出されたカードが13枚ではありません（現在 " + totalCount + " 枚）。このまま送信しますか？")) {
-                    statusDiv.innerText = "送信をキャンセルしました。手札を修正してください。";
+                    statusDiv.innerText = "送信をキャンセルしました。手札を修正してください.。";
                     return;
                 }
             }
@@ -215,7 +218,7 @@ html  904 1425
                 inputField.value = "";
                 
             } catch (e) {
-                statusDiv.innerHTML = "<div style='color:red; font-size:1.1rem;'>❌ 送信エラー</div><div style='font-size:0.9rem; margin-top:5px;'>通信に失敗しました。</div>";
+                statusDiv.innerHTML = "<div style='color:red; font-size:1.1rem;'>❌ 送信エラー</div><div style='font-size:0.9rem; margin-top:5px;'>通信に失敗しました。最新のURLが正しく貼られているか確認してください。</div>";
             }
         }
     </script>
