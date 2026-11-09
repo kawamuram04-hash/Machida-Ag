@@ -1,4 +1,4 @@
-html 202611091620
+html　2611092020
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -31,7 +31,7 @@ html 202611091620
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 12px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -43,7 +43,7 @@ html 202611091620
             max-width: 480px;
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 15px;
+            padding: 10px 12px;
             border: 2px solid #3498db;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             text-align: center;
@@ -53,11 +53,11 @@ html 202611091620
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         h1 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: bold;
             color: #1a5276;
         }
@@ -65,27 +65,26 @@ html 202611091620
         .sub-header-alert {
             color: var(--text-alert);
             font-weight: bold;
-            font-size: 0.95rem;
-            margin-bottom: 12px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
         }
 
-        /* スート選択（S, H, D, C）4連セクター */
         .suit-selector-zone {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 6px;
             background: #ecf0f1;
-            padding: 8px;
+            padding: 6px;
             border-radius: 8px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .suit-select-btn {
-            height: 48px;
+            height: 44px;
             background: white;
             border: 2px solid var(--border-color);
             border-radius: 6px;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -93,45 +92,42 @@ html 202611091620
         }
 
         .suit-select-btn.active-suit {
-            font-size: 2rem;
+            font-size: 1.8rem;
             border-color: var(--btn-blue);
             background: #e0f0ff;
             font-weight: bold;
         }
 
-        /* Excel完全再現ディスプレイモニター */
         .display-monitor {
             background: var(--bg-display);
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border: 2px solid #34495e;
         }
 
         .display-text {
             color: var(--text-display);
-            font-size: 1.35rem;
+            font-size: 1.1rem;
             font-family: monospace;
             font-weight: bold;
-            letter-spacing: 1.5px;
+            letter-spacing: 0.5px;
             overflow-x: auto;
             white-space: nowrap;
             width: 82%;
             text-align: left;
         }
 
-        /* モニター内の各カード文字スパン */
         .clickable-card {
             display: inline-block;
-            padding: 2px 4px;
+            padding: 1px 2px;
             border-radius: 4px;
             transition: all 0.1s;
         }
 
-        /* 消しゴムモードONの時、モニター内の文字を赤く強調して狙いやすくする */
         body.eraser-active .clickable-card {
             cursor: pointer;
             background: rgba(231, 76, 60, 0.15);
@@ -141,39 +137,37 @@ html 202611091620
 
         .counter-badge {
             color: var(--btn-green);
-            font-size: 1.9rem;
+            font-size: 1.7rem;
             font-weight: bold;
             font-family: monospace;
         }
 
-        /* ガイダンスエリア */
         .guidance-box {
             background: #fff9e6;
             border: 1px solid #f39c12;
             border-radius: 6px;
-            padding: 10px;
+            padding: 8px;
             color: #d35400;
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             font-weight: bold;
-            margin-bottom: 12px;
-            line-height: 1.4;
+            margin-bottom: 10px;
+            line-height: 1.3;
         }
 
-        /* テンキー（A〜2）のグリッド */
         .rank-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            margin-bottom: 6px;
+            gap: 5px;
+            margin-bottom: 5px;
         }
 
         .key-btn {
-            height: 48px;
+            height: 44px;
             border: none;
             border-radius: 6px;
             background: var(--btn-green);
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: bold;
             cursor: pointer;
             display: flex;
@@ -185,21 +179,20 @@ html 202611091620
             background: #2980b9;
         }
 
-        /* 鉛筆と消しゴムの2大アイコンコントロールゾーン */
         .mode-control-zone {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 10px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-top: 8px;
+            margin-bottom: 12px;
             background: #f8f9fa;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
 
         .icon-mode-btn {
-            height: 54px;
+            height: 48px;
             border: 2px solid var(--border-color);
             border-radius: 8px;
             background: white;
@@ -208,19 +201,18 @@ html 202611091620
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: bold;
             color: #7f8c8d;
-            opacity: 0.4; /* デフォルトは薄色（半透明） */
+            opacity: 0.4;
             transition: all 0.15s ease;
         }
 
         .icon-mode-btn span.icon {
-            font-size: 1.5rem;
-            margin-bottom: 2px;
+            font-size: 1.3rem;
+            margin-bottom: 1px;
         }
 
-        /* 鉛筆ボタン（活性時：緑の太枠＆100%クッキリ表示） */
         .icon-mode-btn.pencil-btn.active-mode {
             opacity: 1;
             border-color: var(--btn-green);
@@ -228,7 +220,6 @@ html 202611091620
             background: #f4fbf7;
         }
 
-        /* 消しゴムボタン（活性時：赤的太枠＆100%クッキリ表示） */
         .icon-mode-btn.eraser-btn.active-mode {
             opacity: 1;
             border-color: var(--btn-red);
@@ -236,14 +227,13 @@ html 202611091620
             background: #fff5f5;
         }
 
-        /* 最初からクリアボタンの独立化 */
         .clear-action-btn {
-            height: 48px;
+            height: 44px;
             border: none;
             border-radius: 6px;
             background: #95a5a6;
             color: white;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: bold;
             cursor: pointer;
             display: flex;
@@ -251,7 +241,6 @@ html 202611091620
             justify-content: center;
         }
 
-        /* 下部一発確定送信ボタン */
         .action-container {
             margin-top: 5px;
         }
@@ -259,11 +248,11 @@ html 202611091620
         .action-btn {
             display: block;
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border-radius: 6px;
             border: none;
             color: white;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             text-align: center;
@@ -281,11 +270,10 @@ html 202611091620
 <div class="container">
     <header>
         <h1>🖐 ハンドの入力 (.index)</h1>
-        <div style="font-size: 1.4rem;">🧼</div>
+        <div style="font-size: 1.2rem;">🧼</div>
     </header>
     <div class="sub-header-alert">※プレイヤーの方は、ここだけ作業をしてください。</div>
 
-    <!-- スート4連ボタン -->
     <div class="suit-selector-zone">
         <button class="suit-select-btn active-suit" data-suit="S">S</button>
         <button class="suit-select-btn" data-suit="H">H</button>
@@ -293,16 +281,13 @@ html 202611091620
         <button class="suit-select-btn" data-suit="C">C</button>
     </div>
 
-    <!-- ディスプレイモニター -->
     <div class="display-monitor">
         <div class="display-text" id="displayText"></div>
         <div class="counter-badge" id="cardCounter">0</div>
     </div>
 
-    <!-- ガイダンス文エリア -->
     <div class="guidance-box" id="guidanceBox">カードを選んでタップしてください。</div>
 
-    <!-- テンキーエリア（A〜8） -->
     <div class="rank-grid">
         <button class="key-btn" data-rank="A">A</button>
         <button class="key-btn" data-rank="K">K</button>
@@ -312,7 +297,6 @@ html 202611091620
         <button class="key-btn" data-rank="9">9</button>
         <button class="key-btn" data-rank="8">8</button>
     </div>
-    <!-- テンキーエリア（7〜2） -->
     <div class="rank-grid" style="margin-bottom: 10px;">
         <button class="key-btn" data-rank="7">7</button>
         <button class="key-btn" data-rank="6">6</button>
@@ -323,7 +307,6 @@ html 202611091620
         <button class="clear-action-btn" id="clearBtn">最初から</button>
     </div>
 
-    <!-- 鉛筆と消しゴムの2大モードコントローラー -->
     <div class="mode-control-zone">
         <button class="icon-mode-btn pencil-btn active-mode" id="pencilModeBtn">
             <span class="icon">✏️</span>
@@ -335,21 +318,21 @@ html 202611091620
         </button>
     </div>
 
-    <!-- 確定送信ボタン -->
     <div class="action-container">
         <button id="okActionBtn" class="action-btn" disabled>OK (スプレッドシートへ確定送信)</button>
     </div>
 </div>
+
 <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbygAPVWSVTInhfQ3cx3-VkQk1WhHVA3iozzCn3--FuJh5-DPIRSBFZb4ubCRkTCav-QfQ/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbygAPVWSVTInhfQ3cx3-VkQk1WhHVA3iozzCn3--"+
+     "FuJh5-DPIRSBFZb4ubCRkTCav-QfQ/exec";
 
     const RANKS = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
     const SUITS = ['S', 'H', 'D', 'C'];
 
     let currentSuit = 'S';
-    let isEraserMode = false; // 消しゴムモードの状態フラグ
+    let isEraserMode = false;
 
-    // Excelプロトに完全準拠した4行×13列の2次元マトリックス構造
     let cardMatrix = {
         S: new Array(13).fill(""),
         H: new Array(13).fill(""),
@@ -357,224 +340,162 @@ html 202611091620
         C: new Array(13).fill("")
     };
 
-    // DOM要素の確実な取得
     const displayText = document.getElementById('displayText');
     const cardCounter = document.getElementById('cardCounter');
-    const guidanceBox = document.getElementById('guidanceBox');
-    const okActionBtn = document.getElementById('okActionBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const pencilModeBtn = document.getElementById('pencilModeBtn');
-    const eraserModeBtn = document.getElementById('eraserModeBtn');
-
-    function countSelectedCards() {
-        let total = 0;
-        SUITS.forEach(suit => {
-            total += cardMatrix[suit].filter(val => val !== "").length;
-        });
-        return total;
-    }
-
-    // 4連スート選択ボタン（S, H, D, C）の切り替え
-    document.querySelectorAll('.suit-select-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.suit-select-btn').forEach(b => b.classList.remove('active-suit'));
-            btn.classList.add('active-suit');
-            currentSuit = btn.dataset.suit;
-            updateKeyboardStyles();
-        });
-    });
-
-    // ★お色直し：鉛筆モード（入力）がクリックされた時の挙動
-    pencilModeBtn.addEventListener('click', () => {
-        setEraserMode(false);
-    });
-
-    // ★お色直し：消しゴムモード（消去）がクリックされた時の挙動
-    eraserModeBtn.addEventListener('click', () => {
-        setEraserMode(true);
-    });
-
-    // モード切り替えの一元化処理（薄色・濃色・太枠を連動）
-    function setEraserMode(active) {
-        isEraserMode = active;
-        if (isEraserMode) {
-            document.body.classList.add('eraser-active');
-            eraserModeBtn.classList.add('active-mode');
-            pencilModeBtn.classList.remove('active-mode'); // 鉛筆を薄色にする
-            guidanceBox.innerHTML = "<span style='color:var(--btn-red)'>【消しゴム稼働中】モニター内の消したいカード文字を直接タップしてください。</span>";
-        } else {
-            document.body.classList.remove('eraser-active');
-            pencilModeBtn.classList.add('active-mode'); // 鉛筆を濃色にする
-            eraserModeBtn.classList.remove('active-mode');
-            syncStateToUI();
-        }
-    }
-
-    // テンキーボードのポチポチ追加タップ処理
-    document.querySelectorAll('.rank-grid .key-btn:not(.clear-action-btn)').forEach(btn => {
-        btn.addEventListener('click', () => {
-            // 消しゴムモードONの時は、誤操作を防ぐためにテンキーを安全にロック
-            if (isEraserMode) return;
-
-            const rank = btn.dataset.rank;
-            const r_ix = RANKS.indexOf(rank);
-            const totalCount = countSelectedCards();
-
-            // 13枚の時は新規追加を厳格にロック（VBAのIf Range("y7") = 13に準拠）
-            if (totalCount === 13 && cardMatrix[currentSuit][r_ix] === "") {
-                guidanceBox.innerHTML = "<span style='color:var(--text-alert)'>⚠️ カード枚数が13枚を超えるため、実行できません</span>";
-                return; 
-            }
-
-            // トグル処理（選択⇔取消）
-            if (cardMatrix[currentSuit][r_ix] === "") {
-                cardMatrix[currentSuit][currentSuit === btn.dataset.suit ? r_ix : r_ix] = rank;
-            } else {
-                cardMatrix[currentSuit][r_ix] = "";
-            }
-
-            syncStateToUI(); // 1文字毎に最速同期
-        });
-    });
-
-    // 最初からクリア処理
-    clearBtn.addEventListener('click', () => {
-        SUITS.forEach(suit => cardMatrix[suit].fill(""));
-        document.querySelectorAll('.suit-select-btn').forEach(b => b.classList.remove('active-suit'));
-        document.querySelector('.suit-select-btn[data-suit="S"]').classList.add('active-suit');
-        currentSuit = 'S';
-        setEraserMode(false);
-    });
-
-    function updateKeyboardStyles() {
-        document.querySelectorAll('.rank-grid .key-btn:not(.clear-action-btn)').forEach(btn => {
-            const r_ix = RANKS.indexOf(btn.dataset.rank);
-            btn.classList.toggle('selected', cardMatrix[currentSuit][r_ix] !== "");
-        });
-    }
-
-    // 同期エンジン（ノイズSAHDCを排除した、Excel数式のJavaScript完全移植版）
-    function syncStateToUI() {
-        displayText.innerHTML = ""; // モニターの初期化
-
-        SUITS.forEach(suit => {
-            const hasCards = cardMatrix[suit].some(val => val !== "");
-            
-            if (hasCards) {
-                const suitSpan = document.createElement('span');
-                suitSpan.innerText = suit;
-                displayText.appendChild(suitSpan);
-
-                RANKS.forEach(rank => {
-                    const r_ix = RANKS.indexOf(rank);
-                    if (cardMatrix[suit][r_ix] !== "") {
-                        const cardSpan = document.createElement('span');
-                        cardSpan.className = "clickable-card";
-                        cardSpan.innerText = rank;
-                        
-                        // ★魂の移植：モニター内の文字がタップされた時の消しゴム処理
-                        cardSpan.addEventListener('click', (e) => {
-                            if (!isEraserMode) return;
-                            e.stopPropagation();
-                            
-                            // 消しゴム発動！マトリックスを空文字に消去
-                            cardMatrix[suit][r_ix] = "";
-                            
-                            // ★おもてなし：1文字消去したら、即座に自動で「鉛筆モード」へ逆流復帰させる！
-                            setEraserMode(false); 
-                        });
-                        
-                        displayText.appendChild(cardSpan);
-                    }
-                });
-            }
-        });
-
-        const count = countSelectedCards();
-        cardCounter.innerText = count;
-
-        updateKeyboardStyles();
-
-        // ★ご指示通りのガイダンス文（文章）の厳格化
-        if (!isEraserMode) {
-            if (count === 13) {
-                guidanceBox.innerHTML = "<span style='color:var(--btn-blue); font-weight:bold;'>１３枚揃っています。最終確認をして、OKボタンを押して下さい。</span>";
-                okActionBtn.disabled = false;
-            } else {
-                guidanceBox.innerHTML = "カードを選んでタップしてください。誤りは作成中に見つけて、消しゴムで修正しておいてください。";
-                okActionBtn.disabled = true;
-            }
-        }
-    }
-        // ★【第3部】Excelマトリックスから52ビット空間へ自動パースし、『GAS_URL』へ送信する最終ブロック
-    okActionBtn.addEventListener('click', async () => {
-        const count = countSelectedCards();
-        if (count !== 13) return;
-
-        // 1. 2次元の cardMatrix から、52マスのフラットな真偽値配列（bitVector）へ美しく展開
-        let bitVector = new Array(52).fill(false);
-        let bitPosition = 0;
-
-        // S➔H➔D➔C、A➔2 の厳格な順番でマトリックスを一列のビット列へコンバート
-        SUITS.forEach(suit => {
-            RANKS.forEach(rank => {
-                const r_ix = RANKS.indexOf(rank);
-                if (cardMatrix[suit][r_ix] !== "") {
-                    bitVector[bitPosition] = true;
-                }
-                bitPosition++;
-            });
-        });
-
-        // 2. 実績100%のGist本物ロジック（reduce）で、ピュアな数値型の int1, int2 を一瞬で生成
-        const int1 = bitVector.slice(0, 26).reduce((acc, curr) => { return (acc << 1) | (curr ? 1 : 0); }, 0);
-        const int2 = bitVector.slice(26, 52).reduce((acc, curr) => { return (acc << 1) | (curr ? 1 : 0); }, 0);
-        
-        let bitString = "";
-        for (let i = 0; i < 52; i++) {
-            bitString += bitVector[i] ? "1" : "0";
-        }
-
-        // 連打防止のための安全なロック
-        okActionBtn.disabled = true;
-        guidanceBox.innerHTML = "🚀 スプレッドシートへデータを安全に送信中...";
-
-        try {
-            // コメントノイズを完全に排除した、Gist版の本物のペイロード構造
-            const payload = {
-                action: "send_data",
-                int1: int1,
-                int2: int2,
-                raw: bitString
-            };
-
-            // 第1パートに定義された、本物の『GAS_URL』を実直に呼び出して Fetch 送信！
-            const response = await fetch(GAS_URL, {
-                method: "POST",
-                mode: "cors",
-                headers: {
-                    "Content-Type": "text/plain"
-                },
-                body: JSON.stringify(payload)
-            });
-
-            // GASからの成功レスポンスを実直にパースしてフリーズを完全に防止
-            const result = await response.json();
-
-            if (result.status === "success") {
-                guidanceBox.innerHTML = "✨ 送信完了：正確なデータがC列・D列に記録されました！ブラウザを閉じて大丈夫です。";
-            } else {
-                throw new Error();
-            }
-
-        } catch (error) {
-            guidanceBox.innerHTML = "<span style='color:var(--text-alert)'>⚠️ 送信に失敗しました。再起動するか、通信環境を確認してください。</span>";
-            okActionBtn.disabled = false;
-        }
-    });
-
-    // 初期起動時の画面同期
-    syncStateToUI();
+const guidanceBox = document.getElementById('guidanceBox');
+const okActionBtn = document.getElementById('okActionBtn');
+const clearBtn = document.getElementById('clearBtn');
+const pencilModeBtn = document.getElementById('pencilModeBtn');
+const eraserModeBtn = document.getElementById('eraserModeBtn');
+function countSelectedCards() {
+let total = 0;
+SUITS.forEach(suit => {
+total += cardMatrix[suit].filter(val => val !== "").length;
+});
+return total;
+}
+document.querySelectorAll('.suit-select-btn').forEach(btn => {
+btn.addEventListener('click', () => {
+document.querySelectorAll('.suit-select-btn').forEach(b => b.classList.remove('active-suit'));
+btn.classList.add('active-suit');
+currentSuit = btn.dataset.suit;
+updateKeyboardStyles();
+});
+});
+pencilModeBtn.addEventListener('click', () => { setEraserMode(false); });
+eraserModeBtn.addEventListener('click', () => { setEraserMode(true); });
+function setEraserMode(active) {
+isEraserMode = active;
+if (isEraserMode) {
+document.body.classList.add('eraser-active');
+eraserModeBtn.classList.add('active-mode');
+pencilModeBtn.classList.remove('active-mode');
+guidanceBox.innerHTML = "【消しゴム稼働中】モニター内の消したいカード文字を直接タップしてください。";
+} else {
+document.body.classList.remove('eraser-active');
+pencilModeBtn.classList.add('active-mode');
+eraserModeBtn.classList.remove('active-mode');
+syncStateToUI();
+}
+}
+document.querySelectorAll('.rank-grid .key-btn:not(.clear-action-btn)').forEach(btn => {
+btn.addEventListener('click', () => {
+if (isEraserMode) return;
+const rank = btn.dataset.rank;
+const r_ix = RANKS.indexOf(rank);
+const totalCount = countSelectedCards();
+if (totalCount === 13 && cardMatrix[currentSuit][r_ix] === "") {
+guidanceBox.innerHTML = "⚠️ カード枚数が13枚を超えるため、実行できません";
+return;
+}
+if (cardMatrix[currentSuit][r_ix] === "") {
+cardMatrix[currentSuit][r_ix] = rank;
+} else {
+cardMatrix[currentSuit][r_ix] = "";
+}
+syncStateToUI();
+});
+});
+clearBtn.addEventListener('click', () => {
+SUITS.forEach(suit => cardMatrix[suit].fill(""));
+document.querySelectorAll('.suit-select-btn').forEach(b => b.classList.remove('active-suit'));
+document.querySelector('.suit-select-btn[data-suit="S"]').classList.add('active-suit');
+currentSuit = 'S';
+setEraserMode(false);
+});
+function updateKeyboardStyles() {
+document.querySelectorAll('.rank-grid .key-btn:not(.clear-action-btn)').forEach(btn => {
+const r_ix = RANKS.indexOf(btn.dataset.rank);
+btn.classList.toggle('selected', cardMatrix[currentSuit][r_ix] !== "");
+});
+}
+function syncStateToUI() {
+displayText.innerHTML = "";
+SUITS.forEach(suit => {
+const hasCards = cardMatrix[suit].some(val => val !== "");
+if (hasCards) {
+const suitSpan = document.createElement('span');
+suitSpan.innerText = suit;
+displayText.appendChild(suitSpan);
+RANKS.forEach(rank => {
+const r_ix = RANKS.indexOf(rank);
+if (cardMatrix[suit][r_ix] !== "") {
+const cardSpan = document.createElement('span');
+cardSpan.className = "clickable-card";
+cardSpan.innerText = rank;
+cardSpan.addEventListener('click', (e) => {
+if (!isEraserMode) return;
+e.stopPropagation();
+cardMatrix[suit][r_ix] = "";
+setEraserMode(false);
+});
+displayText.appendChild(cardSpan);
+}
+});
+}
+});
+const count = countSelectedCards();
+cardCounter.innerText = count;
+updateKeyboardStyles();
+if (!isEraserMode) {
+if (count === 13) {
+guidanceBox.innerHTML = "１３枚揃っています。最終確認をして、OKボタンを押して下さい。";
+okActionBtn.disabled = false;
+} else {
+guidanceBox.innerHTML = "カードを選んでタップしてください。誤りは作成中に見つけて、消しゴムで修正しておいてください。";
+okActionBtn.disabled = true;
+}
+}
+}
+okActionBtn.addEventListener('click', async () => {
+const count = countSelectedCards();
+if (count !== 13) return;
+let bitVector = new Array(52).fill(false);
+let bitPosition = 0;
+SUITS.forEach(suit => {
+RANKS.forEach(rank => {
+const r_ix = RANKS.indexOf(rank);
+if (cardMatrix[suit][r_ix] !== "") {
+bitVector[bitPosition] = true;
+}
+bitPosition++;
+});
+});
+const int1 = bitVector.slice(0, 26).reduce((acc, curr) => { return (acc << 1) | (curr ? 1 : 0); }, 0);
+const int2 = bitVector.slice(26, 52).reduce((acc, curr) => { return (acc << 1) | (curr ? 1 : 0); }, 0);
+let bitString = "";
+for (let i = 0; i < 52; i++) {
+bitString += bitVector[i] ? "1" : "0";
+}
+okActionBtn.disabled = true;
+guidanceBox.innerHTML = "🚀 スプレッドシートへデータを安全に送信中...";
+try {
+const payload = {
+action: "send_data",
+int1: int1,
+int2: int2,
+raw: bitString
+};
+const response = await fetch(GAS_URL, {
+method: "POST",
+mode: "cors",
+headers: {
+"Content-Type": "text/plain"
+},
+body: JSON.stringify(payload)
+});
+const result = await response.json();
+if (result.status === "success") {
+guidanceBox.innerHTML = "✨ 送信完了：正確なデータがC列・D列に記録されました！ブラウザを閉じて大丈夫です。";
+} else {
+throw new Error();
+}
+} catch (error) {
+guidanceBox.innerHTML = "⚠️ 送信に失敗しました。再起動するか、通信環境を確認してください。";
+okActionBtn.disabled = false;
+}
+});
+syncStateToUI();
 </script>
 </body>
 </html>
