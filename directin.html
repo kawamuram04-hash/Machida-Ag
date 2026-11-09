@@ -1,10 +1,10 @@
-html　2611091400
+html　2611092050
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ハンドの手入力 (.direct)</title>
+    <title>ハンドの手入力 (.directin)</title>
     <style>
         :root {
             --bg-color: #f4f6f9;
@@ -18,180 +18,55 @@ html　2611091400
             --btn-gray: #bdc3c7;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 4px; /* 🪚 周辺の余白を極限までカット */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 10px 12px; /* 🪚 内側の縦余白をスマートに削減 */
-            border: 2px solid #2ecc71;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2px;
-        }
-
-        h1 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #27ae60;
-        }
-
-        /* 🪚 縦を圧迫していた赤文字を小さく引き締め */
-        .sub-header-alert {
-            color: var(--text-alert);
-            font-weight: bold;
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-            text-align: left;
-        }
-
-        .input-box-group {
-            margin-bottom: 8px; /* 🪚 隙間を15pxから8pxへ */
-            text-align: left;
-        }
-
-        .input-label {
-            font-size: 0.8rem; /* 🪚 ラベルをコンパクトに */
-            font-weight: bold;
-            color: var(--text-main);
-            margin-bottom: 2px;
-            display: block;
-        }
-
-        .text-field {
-            width: 100%;
-            height: 38px; /* 🪚 高さを46pxから38pxへスリム化 */
-            padding: 6px 10px;
-            font-size: 1.1rem;
-            font-family: monospace;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-        }
-
-        .text-field:focus {
-            border-color: #2ecc71;
-            outline: none;
-        }
-
-        .display-monitor {
-            background: var(--bg-display);
-            border-radius: 6px;
-            padding: 8px 10px; /* 🪚 モニターの縦の厚みをスリム化 */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .display-text {
-            color: var(--text-display);
-            font-size: 1.25rem;
-            font-family: monospace;
-            font-weight: bold;
-            letter-spacing: 1px;
-            overflow-x: auto;
-            white-space: nowrap;
-            width: 82%;
-            text-align: left;
-        }
-
-        .counter-badge {
-            color: #2ecc71;
-            font-size: 1.7rem;
-            font-weight: bold;
-            font-family: monospace;
-        }
-
-        .guidance-box {
-            background: #e8f8f5;
-            border: 1px solid #2ecc71;
-            border-radius: 6px;
-            padding: 6px 8px; /* 🪚 ガイダンスの座布団も薄型化 */
-            color: #27ae60;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .clear-action-btn {
-            width: 100%;
-            height: 36px; /* 🪚 ボタンもスリムに */
-            border: none;
-            border-radius: 6px;
-            background: #95a5a6;
-            color: white;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        .action-btn {
-            display: block;
-            width: 100%;
-            padding: 11px; /* 🪚 14pxから11pxへ調整 */
-            border-radius: 6px;
-            border: none;
-            color: white;
-            font-size: 1.05rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            background: var(--btn-blue);
-        }
-
-        .action-btn:disabled {
-            background: var(--btn-gray) !important;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 4px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 480px; background: var(--card-bg); border-radius: 10px; padding: 10px 12px; border: 2px solid #2ecc71; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+        h1 { font-size: 1.25rem; font-weight: bold; color: #27ae60; }
+        .sub-header-alert { color: var(--text-alert); font-weight: bold; font-size: 0.8rem; margin-bottom: 8px; text-align: left; }
+        .input-box-group { margin-bottom: 8px; text-align: left; }
+        .input-label { font-size: 0.8rem; font-weight: bold; color: var(--text-main); margin-bottom: 2px; display: block; }
+        
+        /* 🪚 inputmode="numeric" を指定し、スマホで開いた瞬間に全自動で「数字テンキー」を強制起動！ */
+        .text-field { width: 100%; height: 38px; padding: 6px 10px; font-size: 1.1rem; font-family: monospace; border: 2px solid var(--border-color); border-radius: 6px; }
+        .text-field:focus { border-color: #2ecc71; outline: none; }
+        
+        .display-monitor { background: var(--bg-display); border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; }
+        .display-text { color: var(--text-display); font-size: 1.25rem; font-family: monospace; font-weight: bold; letter-spacing: 1px; overflow-x: auto; white-space: nowrap; width: 82%; text-align: left; }
+        .counter-badge { color: #2ecc71; font-size: 1.7rem; font-weight: bold; font-family: monospace; }
+        .guidance-box { background: #e8f8f5; border: 1px solid #2ecc71; border-radius: 6px; padding: 6px 8px; color: #27ae60; font-size: 0.82rem; font-weight: bold; margin-bottom: 10px; line-height: 1.3; text-align: left; }
+        .clear-action-btn { width: 100%; height: 36px; border: none; border-radius: 6px; background: #95a5a6; color: white; font-size: 0.9rem; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        .action-container { margin-top: 5px; }
+        .action-btn { display: block; width: 100%; padding: 11px; border-radius: 6px; border: none; color: white; font-size: 1.05rem; font-weight: bold; cursor: pointer; text-align: center; background: var(--btn-blue); }
+        .action-btn:disabled { background: var(--btn-gray) !important; cursor: not-allowed; opacity: 0.5; }
     </style>
 </head>
 <body>
 <div class="container">
     <header>
-        <h1>⌨ ハンドの手入力 (.direct)</h1>
+        <h1>⌨ ハンドの手入力 (.directin)</h1>
         <div style="font-size: 1.2rem;">📝</div>
     </header>
-    <div class="sub-header-alert">※プレイヤー用手入力画面</div>
+    <div class="sub-header-alert"></div>
 
     <div class="input-box-group">
-        <label class="input-label">▼ キーボード手入力ボックス</label>
-        <input type="text" id="rawTextBox" class="text-field" placeholder="例: SAKHQT9D765C432" autocomplete="off">
+        <label class="input-label">▼ 入力域 (例: S852HKJ...  A,K等は01,13でも可です)</label>
+        <!-- inputmode="numeric" により、スマホ画面で英字切り替えボタンを押す手間すら省きます -->
+        <input type="text" id="rawTextBox" class="text-field" placeholder="" autocomplete="off">
     </div>
 
     <div class="input-box-group">
-        <label class="input-label">▼ マトリックス正規化・並び替えモニター</label>
+        <label class="input-label">▼ モニター（スート・ランクで並び替え）</label>
         <div class="display-monitor">
             <div class="display-text" id="displayText"></div>
             <div class="counter-badge" id="cardCounter">0</div>
         </div>
     </div>
 
-    <div class="guidance-box" id="guidanceBox">手札を文字で入力してください。</div>
+    <div class="guidance-box" id="guidanceBox">
+        【入力法】最初に入頭スート（S, H, D, C）を入れ、以降は数字のまま連続入力できます。<br>
+        ★ 01➔A / 10➔T / 11➔J / 12➔Q / 13➔K / 2〜9➔そのまま
+    </div>
 
     <button class="clear-action-btn" id="clearBtn">ボックスを空にする</button>
 
@@ -201,18 +76,13 @@ html　2611091400
 </div>
 
 <script>
-    // ⚠️登録係の画面（initialize）の最上部に貼ってあるURL変数を、ここにも1行丸ごとコピペしてください。
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbygAPVWSVTInhfQ3cx3-VkQk1WhHVA3iozzCn3--"+
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbygAPVWSVTInhfQ3cx3-VkQk1WhHVA3iozzCn3--"+
        "FuJh5-DPIRSBFZb4ubCRkTCav-QfQ/exec";
+
     const RANKS = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
     const SUITS = ['S', 'H', 'D', 'C'];
 
-    let cardMatrix = {
-        S: new Array(13).fill(""),
-        H: new Array(13).fill(""),
-        D: new Array(13).fill(""),
-        C: new Array(13).fill("")
-    };
+    let cardMatrix = { S: new Array(13).fill(""), H: new Array(13).fill(""), D: new Array(13).fill(""), C: new Array(13).fill("") };
 
     const rawTextBox = document.getElementById('rawTextBox');
     const displayText = document.getElementById('displayText');
@@ -221,47 +91,62 @@ html　2611091400
     const okActionBtn = document.getElementById('okActionBtn');
     const clearBtn = document.getElementById('clearBtn');
 
-    function toHalfWidth(str) {
-        return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
-            return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
-        });
-    }
+    function toHalfWidth(str) { return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) { return String.fromCharCode(s.charCodeAt(0) - 0xFEE0); }); }
+    function countSelectedCards() { let total = 0; SUITS.forEach(suit => { total += cardMatrix[suit].filter(val => val !== "").length; }); return total; }
 
-    function countSelectedCards() {
-        let total = 0;
-        SUITS.forEach(suit => {
-            total += cardMatrix[suit].filter(val => val !== "").length;
-        });
-        return total;
-    }
-
+    // ★ユーザー様直筆仕様：2桁デジタルパース変換器
     rawTextBox.addEventListener('input', () => {
         let rawText = toHalfWidth(rawTextBox.value).toUpperCase().replace(/\s+/g, '');
-        rawText = rawText.replace(/10/g, 'T');
-
         SUITS.forEach(suit => cardMatrix[suit].fill(""));
 
         let currentParsingSuit = null;
-        for (let i = 0; i < rawText.length; i++) {
+        let i = 0;
+
+        while (i < rawText.length) {
             const char = rawText[i];
+
             if (SUITS.includes(char)) {
-                currentParsingSuit = char;
-            } else if (currentParsingSuit && RANKS.includes(char)) {
-                const r_ix = RANKS.indexOf(char);
-                cardMatrix[currentParsingSuit][r_ix] = char;
+                currentParsingSuit = char; // スート（S, H, D, C）を検知
+                i++;
+            } else if (currentParsingSuit) {
+                // 数字が来た場合、2桁先読みチェックを行う
+                let parsedRank = null;
+                let step = 1;
+
+                if (char === '0' && i + 1 < rawText.length && rawText[i+1] === '1') {
+                    parsedRank = 'A'; step = 2; // 01 ➔ A
+                } else if (char === '1' && i + 1 < rawText.length) {
+                    const nextChar = rawText[i+1];
+                    if (nextChar === '0') { parsedRank = 'T'; step = 2; } // 10 ➔ T
+                    else if (nextChar === '1') { parsedRank = 'J'; step = 2; } // 11 ➔ J
+                    else if (nextChar === '1' || nextChar === '2') { parsedRank = 'Q'; step = 2; } // 12 ➔ Q
+                    else if (nextChar === '3') { parsedRank = 'K'; step = 2; } // 13 ➔ K
+                    // 14〜19などの不正な2桁は、通常の「1」として扱いスルー（安全ガード）
+                }
+
+                // 2桁特例に該当しなかった場合は、通常の1桁数字（2〜9）として実直に処理
+                if (!parsedRank && RANKS.includes(char)) {
+                    parsedRank = char;
+                    step = 1;
+                }
+
+                if (parsedRank) {
+                    const r_ix = RANKS.indexOf(parsedRank);
+                    cardMatrix[currentParsingSuit][r_ix] = parsedRank;
+                }
+                i += step; // 解析が進んだ分だけ文字ポインタを進める
+            } else {
+                i++; // スート未選択時の数字は安全にスキップ
             }
         }
 
+        // モニター表示の再計算
         let resultSegments = [];
         SUITS.forEach(suit => {
-            let suitStr = suit;
-            let hasCards = false;
+            let suitStr = suit; let hasCards = false;
             RANKS.forEach(rank => {
                 const r_ix = RANKS.indexOf(rank);
-                if (cardMatrix[suit][r_ix] !== "") {
-                    suitStr += rank;
-                    hasCards = true;
-                }
+                if (cardMatrix[suit][r_ix] !== "") { suitStr += rank; hasCards = true; }
             });
             if (hasCards) resultSegments.push(suitStr);
         });
@@ -276,10 +161,10 @@ html　2611091400
             guidanceBox.innerHTML = "<span style='color:var(--btn-blue); font-weight:bold;'>✓ １３枚揃いました。OKボタンを押して下さい。</span>";
             okActionBtn.disabled = false;
         } else if (count > 13) {
-            guidanceBox.innerHTML = "<span style='color:var(--text-alert)'>⚠️ 13枚超過（現在" + count + "枚）。文字を削ってください。</span>";
+            guidanceBox.innerHTML = "<span style='color:var(--text-alert)'>⚠️ 13枚超過（現在" + count + "枚）。数字を削ってください。</span>";
             okActionBtn.disabled = true;
         } else {
-            guidanceBox.innerHTML = "現在 " + count + " 枚。13枚ぴったりに入力してください。";
+            guidanceBox.innerHTML = "現在 " + count + " 枚。13枚ぴったりに入力してください。★ 01➔A / 10➔T / 11➔J / 12➔Q / 13➔K";
             okActionBtn.disabled = true;
         }
     });
@@ -299,7 +184,6 @@ html　2611091400
 
         let bitVector = new Array(52).fill(false);
         let bitPosition = 0;
-
         SUITS.forEach(suit => {
             RANKS.forEach(rank => {
                 const r_ix = RANKS.indexOf(rank);
@@ -318,12 +202,12 @@ html　2611091400
 
         try {
             const payload = { action: "send_data", int1: int1, int2: int2, raw: bitString };
-const response = await fetch(GAS_URL, {
-method: "POST",
-mode: "cors",
-headers: { "Content-Type": "text/plain" },
-body: JSON.stringify(payload)
-});
+            const response = await fetch(GAS_URL, {
+                method: "POST",
+                mode: "cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(payload)
+            });
 const result = await response.json();
 if (result.status === "success") {
 guidanceBox.innerHTML = "✨ 送信完了：正確に記録されました！ブラウザを閉じてOKです。";
